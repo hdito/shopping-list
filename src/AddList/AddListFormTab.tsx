@@ -1,6 +1,6 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { Button } from "../Button";
-import * as Yup from "yup";
+import { object, string } from "yup";
 
 export const AddListFormTab = ({
   value,
@@ -10,22 +10,22 @@ export const AddListFormTab = ({
 }: {
   label: string;
   value: string;
-  onSave: () => void;
+  onSave: (value: string) => void;
   onCancel: () => void;
 }) => {
   return (
     <Formik
       key={value}
       initialValues={{ [value]: "" }}
-      validationSchema={Yup.object({
-        [value]: Yup.string().required("Required"),
+      validationSchema={object({
+        [value]: string().required("Required"),
       })}
       onSubmit={(values) => {
-        onSave();
+        onSave(values[value]);
         console.log(values);
       }}
     >
-      <Form className="flex flex-col gap-1">
+      <Form className="flex flex-col gap-2 p-2">
         <div className="flex gap-1">
           <label htmlFor={value}>{label}</label>
           <Field

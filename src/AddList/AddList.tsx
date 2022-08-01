@@ -1,21 +1,32 @@
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { MouseEvent, useState } from "react";
 import { Button } from "../Button";
+import { myFirestore } from "../firebase";
 import { AddListFormTab } from "./AddListFormTab";
+import short from "short-uuid";
+import { user } from "../types/user";
 
-export const AddList = () => {
+export const AddList = ({ user }: { user: user }) => {
   const [isOpenAddForm, setIsOpenAddForm] = useState(false);
   const [isCreateNew, setIsCreateNew] = useState(true);
 
   return (
-    <div className="m-1 flex flex-col gap-1 w-full">
+    <div
+      className={`m-1 flex flex-col ${
+        isOpenAddForm && "border-2 shadow-md rounded-md mt-2 overflow-hidden"
+      } gap-1 w-full`}
+    >
       {isOpenAddForm ? (
         <>
-          <div className="flex gap-0.5 bg-gray-300">
+          <div className="flex">
             <button
               onClick={() => {
                 setIsCreateNew(true);
               }}
-              className={`${isCreateNew && "font-semibold"} flex-1 bg-white `}
+              className={`${
+                !isCreateNew &&
+                "shadow-[inset_-2px_-1px_4px_rgb(0,0,0,0.1)] bg-gray-50"
+              } flex-1 bg-white px-2 py-1`}
               type="button"
             >
               Create new
@@ -24,7 +35,10 @@ export const AddList = () => {
               onClick={() => {
                 setIsCreateNew(false);
               }}
-              className={`${!isCreateNew && "font-semibold"} flex-1 bg-white`}
+              className={`${
+                isCreateNew &&
+                "shadow-[inset_2px_-1px_4px_rgb(0,0,0,0.1)] bg-gray-50"
+              } flex-1 bg-white px-2 py-1`}
               type="button"
             >
               Add existing list
@@ -35,7 +49,16 @@ export const AddList = () => {
               value="title"
               label="Title"
               onCancel={() => setIsOpenAddForm(false)}
-              onSave={() => setIsOpenAddForm(false)}
+              onSave={async (title) => {
+                const id = short.generate().toString();
+                await setDoc(doc(myFirestore, "lists", id), {
+                  title,
+                  id,
+                  owner: user.email,
+                  public: false,
+                });
+                setIsOpenAddForm(false);
+              }}
             />
           ) : (
             <AddListFormTab
@@ -47,9 +70,7 @@ export const AddList = () => {
           )}
         </>
       ) : (
-        <Button className="self-start" onClick={() => setIsOpenAddForm(true)}>
-          Add list
-        </Button>
+        <Button onClick={() => setIsOpenAddForm(true)}>Add list</Button>
       )}
     </div>
   );
