@@ -8,30 +8,29 @@ import {
 } from "react-icons/io5";
 import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
 import {
+  arrayRemove,
   collection,
   deleteDoc,
   doc,
   onSnapshot,
   query,
+  serverTimestamp,
   setDoc,
   Unsubscribe,
+  updateDoc,
   where,
 } from "firebase/firestore";
 import { AuthForm } from "./AuthForm";
 import { auth, myFirestore } from "./firebase";
 import { user } from "./types/user";
 import { list } from "./types/list";
+import { EditMenu } from "./EditMenu";
 
 function App() {
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState<list | null>(null);
   const [user, setUser] = useState<null | user>(null);
   const [lists, setLists] = useState<list[]>([]);
   const [shared, setShared] = useState<list[]>([]);
-  const handleClose = (e: MouseEvent) => {
-    if (!editMode) return;
-    if ((e.target as HTMLElement).closest("#edit-menu")) return;
-    setEditMode(false);
-  };
   const unsubscribeUser = useRef<Unsubscribe | null>(null);
   const unsubscribeLists = useRef<Unsubscribe | null>(null);
   const unsubscribeShared = useRef<Unsubscribe | null>(null);
@@ -85,10 +84,7 @@ function App() {
   }, []);
 
   return (
-    <div
-      onClick={(e) => handleClose(e)}
-      className="h-full relative flex flex-col items-center"
-    >
+    <div className="reative h-full flex flex-col items-center">
       {!user ? (
         <AuthForm />
       ) : (
@@ -104,85 +100,102 @@ function App() {
           <main
             className={`${
               editMode ? "blur pointer-events-none" : ""
-            } flex-1 max-w-prose flex flex-col items-center w-full`}
+            } flex-1 max-w-prose flex flex-col items-center gap-2 w-full mt-2`}
           >
             <AddList user={user} />
-            {lists.length && shared.length ? (
+            {!lists.length && !shared.length ? (
               <div className="text-gray-500 italic flex-1 flex items-center">
                 You haven't got any lists yet
               </div>
             ) : (
               <></>
             )}
-            {lists.length ? (
-              <div className="relative w-full px-2 my-2">
-                <div className="absolute w-1 h-full -left-1 bg-black rounded"></div>
+            {lists.length !== 0 && (
+              <div className="w-full pl-2 pr-4 border-l-8 border-black flex flex-col gap-1">
                 <h2 className="font-bold">My lists</h2>
-                {lists.map((list) => (
-                  <div
-                    key={list.id}
-                    className="h-10 shadow-sm border-2 flex items-center gap-1 my-1 px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 hover:rounded-md transition-all duration-100"
-                  >
-                    <h2 className="inline-block mr-auto">{list.title}</h2>
-                    {list.public && (
-                      <span className="bg-green-600 text-white px-1 py-0.5 rounded">
-                        Public
-                      </span>
-                    )}
-                    <button
-                      onClick={() => setEditMode(true)}
-                      className="text-gray-700 hover:text-black text-2xl"
+                {lists
+                  .filter((list) => list.createdAt !== null)
+                  .sort((list1, list2) => {
+                    const secondsDiff =
+                      list2.createdAt.seconds - list1.createdAt.seconds;
+                    if (secondsDiff !== 0) {
+                      return secondsDiff;
+                    } else
+                      return (
+                        list2.createdAt.nanoseconds -
+                        list1.createdAt.nanoseconds
+                      );
+                  })
+                  .map((list) => (
+                    <div
+                      key={list.id}
+                      className="h-10 shadow-sm border-2 flex items-center gap-1 px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 hover:rounded-md transition-all duration-100"
                     >
-                      <IoSettingsOutline title="Settings" />
-                    </button>
-                    <button
-                      onClick={() =>
-                        deleteDoc(doc(myFirestore, "lists", list.id))
-                      }
-                      className="text-gray-700 hover:text-black text-2xl"
-                    >
-                      <IoTrashOutline title="Delete" />
-                    </button>
-                  </div>
-                ))}
+                      <h2 className="inline-block mr-auto">{list.title}</h2>
+                      {list.public && (
+                        <span className="bg-green-600 text-white px-1 py-0.5 rounded">
+                          Public
+                        </span>
+                      )}
+                      <button
+                        onClick={() => setEditMode(list)}
+                        className="text-gray-700 hover:text-black text-2xl"
+                      >
+                        <IoSettingsOutline title="Settings" />
+                      </button>
+                      <button
+                        onClick={() =>
+                          deleteDoc(doc(myFirestore, "lists", list.id))
+                        }
+                        className="text-gray-700 hover:text-black text-2xl"
+                      >
+                        <IoTrashOutline title="Delete" />
+                      </button>
+                    </div>
+                  ))}
               </div>
-            ) : (
-              <></>
             )}
-
-            {shared.length ? (
-              <div className="relative px-2 w-full">
-                <div className="absolute w-1 h-full -left-1 bg-black rounded"></div>
+            {shared.length !== 0 && (
+              <div className="w-full pl-2 pr-4 border-l-8 border-black flex flex-col gap-1">
                 <h2 className="font-bold">Shared</h2>
-                {user.lists.map((list) => (
-                  <div className="h-10 flex shadow-sm border-2 items-center gap-1 my-1 px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 hover:rounded-md transition-all duration-100">
-                    <h2 className="inline-block mr-auto">{list.title}</h2>
-                    <button className="text-gray-700 hover:text-black text-2xl">
-                      <IoTrashOutline title="Delete" />
-                    </button>
-                  </div>
-                ))}
+                {shared
+                  .filter((list) => list.createdAt !== null)
+                  .sort((list1, list2) => {
+                    const secondsDiff =
+                      list2.createdAt.seconds - list1.createdAt.seconds;
+                    if (secondsDiff !== 0) {
+                      return secondsDiff;
+                    } else
+                      return (
+                        list2.createdAt.nanoseconds -
+                        list1.createdAt.nanoseconds
+                      );
+                  })
+                  .map((list) => (
+                    <div
+                      key={list.id}
+                      className="h-10 shadow-sm border-2 flex items-center gap-1 px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 hover:rounded-md transition-all duration-100"
+                    >
+                      <h2 className="inline-block mr-auto">{list.title}</h2>
+                      <button
+                        onClick={() =>
+                          updateDoc(doc(myFirestore, "lists", list.id), {
+                            editors: arrayRemove(user.email),
+                            updatedAt: serverTimestamp(),
+                          })
+                        }
+                        className="text-gray-700 hover:text-black text-2xl"
+                      >
+                        <IoTrashOutline title="Delete" />
+                      </button>
+                    </div>
+                  ))}
               </div>
-            ) : (
-              <></>
             )}
           </main>
           {editMode && (
-            <div
-              id="edit-menu"
-              className="bg-white p-2 border-2 rounded absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-            >
-              <h2 className="font-bold">Edit list</h2>
-              <label htmlFor="edit-title">Title</label>
-              <input type="text" id="edit-title" />
-              <button
-                onClick={() => setEditMode(false)}
-                className="absolute right-1 top-1"
-              >
-                <IoCloseOutline />
-              </button>
-              <input type="checkbox" name="" id="public" />
-              <label htmlFor="public">Make public</label>
+            <div className="bg-black/25 absolute h-full w-full top-0 left-0 flex justify-center items-center xs:px-2">
+              <EditMenu list={editMode} onClose={() => setEditMode(null)} />
             </div>
           )}
         </>
