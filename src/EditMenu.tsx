@@ -51,96 +51,99 @@ export const EditMenu = ({
       })}
     >
       {({ values, setValues }) => (
-        <Form className="flex flex-col gap-2 bg-white p-2 xs:rounded-md">
-          <h2 className="font-bold text-xl">Edit list</h2>
-          <div className="grid grid-cols-[auto_auto] gap-1 items-center ">
-            <label className="justify-self-end" htmlFor="edit-title">
-              Title
-            </label>
-            <Field name="title">
-              {({ field }: { field: FieldProps }) => (
-                <Input id="edit-title" type="text" {...field} />
-              )}
-            </Field>
-            <ErrorMessage name="title">
-              {(msg) => <div className="font-bold text-red-800">{msg}</div>}
-            </ErrorMessage>
-            <div className="col-span-2">
-              <Field id="public-check" name="public" type="checkbox"></Field>
-              <label className="ml-1" htmlFor="public-check">
-                Make public
+        <div className="absolute bg-black/50 top-0 left-0 h-full w-full flex flex-col justify-center items-center">
+          <Form className="flex flex-col gap-2 bg-white p-2 xs:rounded-md">
+            <h2 className="font-bold text-xl">Edit list</h2>
+            <div className="grid grid-cols-[auto_auto] gap-1 items-center ">
+              <label className="justify-self-end" htmlFor="edit-title">
+                Title
               </label>
-            </div>
-            {values.public && (
-              <>
-                <ul className="list-decimal pl-4 col-span-2">
-                  <li>Share list ID with other persons</li>
-                  <li>Add them to your list editors</li>
-                </ul>
-                <label className="justify-self-end" htmlFor="project-id">
-                  Project ID
+              <Field name="title">
+                {({ field }: { field: FieldProps }) => (
+                  <Input id="edit-title" type="text" {...field} />
+                )}
+              </Field>
+              <ErrorMessage name="title">
+                {(msg) => <div className="font-bold text-red-800">{msg}</div>}
+              </ErrorMessage>
+              <div className="col-span-2">
+                <Field id="public-check" name="public" type="checkbox"></Field>
+                <label className="ml-1" htmlFor="public-check">
+                  Make public
                 </label>
-                <div className="flex gap-1">
-                  <input
-                    className="flex-1 border-b-2 hover:border-gray-500 focus-visible:outline-none focus:border-blue-500 focus-visible:border-blue-500"
-                    type="text"
-                    id="project-id"
-                    value={list.id}
-                    readOnly
-                  />
-                  <CopyToClipboard text={list.id}>
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        (e.currentTarget.lastChild as HTMLElement).textContent =
-                          "Copied!";
-                      }}
-                      className="flex gap-1 items-center border-2 rounded px-1 py-0.5"
-                    >
-                      <IoCopyOutline />
-                      <span>Copy ID</span>
-                    </button>
-                  </CopyToClipboard>
-                </div>
-
-                <AddAdmittedEmail
-                  admitted={values.admitted}
-                  onAdd={(admittedEmail) =>
-                    setValues({
-                      ...values,
-                      admitted: [...values.admitted, admittedEmail],
-                    })
-                  }
-                />
-                {values.admitted.map((admittedEmail) => (
-                  <div
-                    className="col-span-2 rounded border-2 py-0.5 px-1 justify-between flex"
-                    key={admittedEmail}
-                  >
-                    {admittedEmail}
-                    <button
-                      onClick={() => {
-                        const newEditors = values.admitted.filter(
-                          (item) => item !== admittedEmail
-                        );
-                        setValues({ ...values, admitted: newEditors });
-                      }}
-                      className="text-gray-700 hover:text-black text-2xl"
-                    >
-                      <IoTrashOutline title="Delete" />
-                    </button>
+              </div>
+              {values.public && (
+                <>
+                  <ul className="list-decimal pl-4 col-span-2">
+                    <li>Share list ID with other persons</li>
+                    <li>Add them to your list editors</li>
+                  </ul>
+                  <label className="justify-self-end" htmlFor="project-id">
+                    Project ID
+                  </label>
+                  <div className="flex gap-1">
+                    <input
+                      className="flex-1 border-b-2 hover:border-gray-500 focus-visible:outline-none focus:border-blue-500 focus-visible:border-blue-500"
+                      type="text"
+                      id="project-id"
+                      value={list.id}
+                      readOnly
+                    />
+                    <CopyToClipboard text={list.id}>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          (
+                            e.currentTarget.lastChild as HTMLElement
+                          ).textContent = "Copied!";
+                        }}
+                        className="flex gap-1 items-center border-2 rounded px-1 py-0.5"
+                      >
+                        <IoCopyOutline />
+                        <span>Copy ID</span>
+                      </button>
+                    </CopyToClipboard>
                   </div>
-                ))}
-              </>
-            )}
-          </div>
-          <div className="flex gap-1">
-            <Button type="submit">Save</Button>
-            <Button onClick={onClose} type="button">
-              Cancel
-            </Button>
-          </div>
-        </Form>
+
+                  <AddAdmittedEmail
+                    admitted={values.admitted}
+                    onAdd={(admittedEmail) =>
+                      setValues({
+                        ...values,
+                        admitted: [...values.admitted, admittedEmail],
+                      })
+                    }
+                  />
+                  {values.admitted.map((admittedEmail) => (
+                    <div
+                      className="col-span-2 rounded border-2 py-0.5 px-1 justify-between flex"
+                      key={admittedEmail}
+                    >
+                      {admittedEmail}
+                      <button
+                        onClick={() => {
+                          const newEditors = values.admitted.filter(
+                            (item) => item !== admittedEmail
+                          );
+                          setValues({ ...values, admitted: newEditors });
+                        }}
+                        className="text-gray-700 hover:text-black text-2xl"
+                      >
+                        <IoTrashOutline title="Delete" />
+                      </button>
+                    </div>
+                  ))}
+                </>
+              )}
+            </div>
+            <div className="flex gap-1">
+              <Button type="submit">Save</Button>
+              <Button onClick={onClose} type="button">
+                Cancel
+              </Button>
+            </div>
+          </Form>
+        </div>
       )}
     </Formik>
   );

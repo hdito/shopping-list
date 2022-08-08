@@ -1,20 +1,40 @@
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  sendEmailVerification,
+  sendSignInLinkToEmail,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
+import { IoClose } from "react-icons/io5";
+import { useNavigate } from "react-router-dom";
 import { object, ref, string } from "yup";
 import { Button } from "./Button";
+import { ErrorMsg } from "./ErrorMsg";
 import { auth } from "./firebase";
+import { Message } from "./Message";
 
 export const AuthForm = () => {
+  const [isShowMessage, setIsShowMessage] = useState(false);
   const [isSignIn, setIsSignIn] = useState(true);
+  const [error, setError] = useState<null | Error>(null);
+  const navigate = useNavigate();
   return (
-    <div className="flex flex-col gap-2 items-center py-2">
-      <h1 className="font-bold">To continue please authentificate</h1>
-      <div className="sm:shadow-sm sm:rounded border-y-2 sm:border-2 sm:max-w-[40ch] w-full">
+    <div className="py-2 w-full">
+      <h1 className="font-bold text-center mb-2">
+        To continue please authentificate
+      </h1>
+      <div className="sm:shadow-sm sm:rounded border-y-2 sm:border-2 sm:max-w-[40ch] w-full m-auto">
         <div className="flex">
           <button
-            onClick={() => setIsSignIn(true)}
+            onClick={() => {
+              setIsSignIn(true);
+            }}
             className={`${
               !isSignIn &&
               "shadow-[inset_-2px_-1px_4px_rgb(0,0,0,0.1)] bg-gray-50"
@@ -23,7 +43,9 @@ export const AuthForm = () => {
             Sign in
           </button>
           <button
-            onClick={() => setIsSignIn(false)}
+            onClick={() => {
+              setIsSignIn(false);
+            }}
             className={`${
               isSignIn &&
               "shadow-[inset_2px_-1px_4px_rgb(0,0,0,0.1)] bg-gray-50"
@@ -34,6 +56,13 @@ export const AuthForm = () => {
         </div>
 
         <div className="flex flex-col items-center gap-2 px-4 py-2">
+          {isShowMessage && (
+            <Message
+              message="Check your inbox to verify email"
+              onClose={() => setIsShowMessage(false)}
+            />
+          )}
+          {error && <ErrorMsg error={error} onClose={() => setError(null)} />}
           {isSignIn ? (
             <>
               <div className="font-bold">Use your account</div>
@@ -44,7 +73,23 @@ export const AuthForm = () => {
                   email: string().required("Required"),
                   password: string().min(6).required("Required"),
                 })}
-                onSubmit={(values) => console.log(values)}
+                onSubmit={async (values, actions) => {
+                  try {
+                    const { user } = await signInWithEmailAndPassword(
+                      auth,
+                      values.email,
+                      values.password
+                    );
+                    if (user.emailVerified) {
+                      navigate("/lists", { replace: true });
+                    } else {
+                      await signOut(auth);
+                      throw new Error("Email isn't verified");
+                    }
+                  } catch (error) {
+                    setError(error as Error);
+                  }
+                }}
               >
                 <Form className="grid grid-cols-[auto_1fr] gap-2">
                   <label className="ml-auto" htmlFor="email">
@@ -86,7 +131,10 @@ export const AuthForm = () => {
               </Formik>
               <div className="font-bold">Or</div>{" "}
               <Button
-                onClick={() => signInWithPopup(auth, new GoogleAuthProvider())}
+                onClick={async () => {
+                  await signInWithPopup(auth, new GoogleAuthProvider());
+                  navigate("/");
+                }}
                 type="submit"
                 className="flex items-center gap-2"
               >
@@ -100,21 +148,49 @@ export const AuthForm = () => {
               <Formik
                 key="sign-up"
                 initialValues={{
+                  name: "",
                   email: "",
                   password: "",
-                  repeatedPassword: "",
                 }}
                 validationSchema={object({
+                  name: string().required("Required"),
                   email: string().required("Required"),
-                  password: string().min(6).required("Required"),
-                  repeatedPassword: string().oneOf(
-                    [ref("password")],
-                    "Passwords must match"
-                  ),
+                  password: string()
+                    .min(6, "Password should be at least 6 characters long")
+                    .required("Required"),
                 })}
-                onSubmit={(values) => console.log(values)}
+                onSubmit={async (values, actions) => {
+                  const userCredential = await createUserWithEmailAndPassword(
+                    auth,
+                    values.email,
+                    values.password
+                  );
+                  await updateProfile(userCredential.user, {
+                    displayName: values.name,
+                  });
+                  await sendEmailVerification(userCredential.user);
+                  setIsShowMessage(true);
+                  actions.setSubmitting(false);
+                  actions.resetForm();
+                }}
               >
                 <Form className="grid grid-cols-[auto_1fr] gap-2">
+                  <label className="ml-auto" htmlFor="name">
+                    Name
+                  </label>
+                  <div className="flex gap-2">
+                    <Field
+                      className="flex-1 border-b-2 hover:border-gray-500 focus-visible:outline-none focus:border-blue-500 focus-visible:border-blue-500"
+                      id="name"
+                      type="name"
+                      name="name"
+                    ></Field>
+                    <ErrorMessage name="name">
+                      {(msg) => (
+                        <div className="font-bold text-red-800">{msg}</div>
+                      )}
+                    </ErrorMessage>
+                  </div>
                   <label className="ml-auto" htmlFor="email">
                     Email
                   </label>
@@ -142,20 +218,6 @@ export const AuthForm = () => {
                       name="password"
                     ></Field>
                     <ErrorMessage name="password">
-                      {(msg) => (
-                        <div className="font-bold text-red-800">{msg}</div>
-                      )}
-                    </ErrorMessage>
-                  </div>
-                  <label htmlFor="repeated-password">Repeat password</label>
-                  <div className="flex gap-2">
-                    <Field
-                      className="flex-1 border-b-2 hover:border-gray-500 focus-visible:outline-none focus:border-blue-500 focus-visible:border-blue-500"
-                      id="repeated-password"
-                      type="password"
-                      name="repeatedPassword"
-                    ></Field>
-                    <ErrorMessage name="repeatedPassword">
                       {(msg) => (
                         <div className="font-bold text-red-800">{msg}</div>
                       )}
