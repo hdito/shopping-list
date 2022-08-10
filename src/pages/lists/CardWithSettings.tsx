@@ -10,15 +10,20 @@ import { myFirestore } from "../../firebase";
 import { useState } from "react";
 import { ErrorMessage, Field, Formik } from "formik";
 import { object, string } from "yup";
+import { Link } from "react-router-dom";
 export const CardWithSettings = ({
   list,
-  isEdited,
-  onSettings,
+  listToEdit,
+  isSettingsBlocked,
+  onListToEdit,
+  onIsSettingsBlocked,
   onManageAccess,
 }: {
   list: list;
-  isEdited: boolean;
-  onSettings: (list: list | null) => void;
+  listToEdit: string | null;
+  isSettingsBlocked: boolean;
+  onListToEdit: (id: string | null) => void;
+  onIsSettingsBlocked: (arg: boolean) => void;
   onManageAccess: (list: list) => void;
 }) => {
   const [isEditTitle, setEditTitle] = useState(false);
@@ -34,7 +39,7 @@ export const CardWithSettings = ({
         });
         setEditTitle(false);
         actions.resetForm();
-        onSettings(null);
+        onIsSettingsBlocked(false);
       }}
     >
       {(props) => (
@@ -56,7 +61,7 @@ export const CardWithSettings = ({
                 </ErrorMessage>
               </>
             ) : (
-              <h2 className="inline-block">{list.title}</h2>
+              <Link to={list.id}>{list.title}</Link>
             )}
             {list.public && (
               <span className="bg-green-600 text-white px-1 py-0.5 rounded ml-auto">
@@ -68,10 +73,11 @@ export const CardWithSettings = ({
                 !list.public && "ml-auto"
               } text-gray-700 hover:text-black text-2xl`}
               onClick={() => {
-                if (isEdited) {
-                  onSettings(null);
+                if (isSettingsBlocked) return;
+                if (listToEdit === list.id) {
+                  onListToEdit(null);
                 } else {
-                  onSettings(list);
+                  onListToEdit(list.id);
                 }
               }}
             >
@@ -84,12 +90,15 @@ export const CardWithSettings = ({
               <IoTrashOutline title="Delete" />
             </button>
           </div>
-          {isEdited && (
+          {listToEdit === list.id && (
             <div className="h-10 p-1 bg-slate-300 flex gap-1">
               <button
                 disabled={isEditTitle}
                 className="flex items-center gap-1 rounded bg-slate-700 px-2 text-slate-50 disabled:opacity-50"
-                onClick={() => setEditTitle(true)}
+                onClick={() => {
+                  setEditTitle(true);
+                  onIsSettingsBlocked(true);
+                }}
               >
                 <IoPencil />
                 Edit title
@@ -115,6 +124,7 @@ export const CardWithSettings = ({
                     className="px-2 py-0.5 rounded border-slate-500 border-2 bg-slate-50"
                     onClick={() => {
                       setEditTitle(false);
+                      onIsSettingsBlocked(false);
                       props.resetForm();
                     }}
                   >

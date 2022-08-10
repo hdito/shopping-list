@@ -37,7 +37,8 @@ export const Lists = ({
   const [shared, setShared] = useState<list[]>([]);
   const [loadingLists, setLoadingLists] = useState(true);
   const [loadingShared, setLoadingShared] = useState(true);
-  const [listToEdit, setListToEdit] = useState<list | null>(null);
+  const [listToEdit, setListToEdit] = useState<string | null>(null);
+  const [isSettingsBlocked, setIsSettingsBlocked] = useState(false);
   const { firestoreUser, loading } = useFirestoreUserContext();
   useEffect(() => {
     console.log({ loading, firestoreUser });
@@ -100,16 +101,12 @@ export const Lists = ({
                   .map((list) => (
                     <CardWithSettings
                       key={list.id}
-                      onSettings={setListToEdit}
+                      isSettingsBlocked={isSettingsBlocked}
+                      onListToEdit={setListToEdit}
+                      onIsSettingsBlocked={setIsSettingsBlocked}
                       onManageAccess={onManageAccess}
                       list={list}
-                      isEdited={
-                        listToEdit
-                          ? listToEdit.id === list.id
-                            ? true
-                            : false
-                          : false
-                      }
+                      listToEdit={listToEdit}
                     />
                   ))}
               </div>

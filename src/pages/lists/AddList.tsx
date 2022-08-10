@@ -93,7 +93,7 @@ export const AddList = ({ user }: { user: user }) => {
           </>
         ) : (
           <button
-            className="rounded px-2 py-1 bg-black text-white hover:bg-gray-700 transition-all duration-100 "
+            className="rounded px-2 py-1 bg-black text-white hover:bg-gray-700 hover:shadow-md transition-all duration-100 "
             onClick={() => setIsOpenAddForm(true)}
           >
             Add list
