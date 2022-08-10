@@ -14,9 +14,9 @@ import { FcGoogle } from "react-icons/fc";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { object, ref, string } from "yup";
-import { Button } from "./Button";
+import { Button } from "../../components/Button";
 import { ErrorMsg } from "./ErrorMsg";
-import { auth } from "./firebase";
+import { auth } from "../../firebase";
 import { Message } from "./Message";
 
 export const AuthForm = () => {

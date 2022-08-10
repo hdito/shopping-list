@@ -16,15 +16,14 @@ import {
   Unsubscribe,
   where,
 } from "firebase/firestore";
-import { AuthForm } from "./AuthForm";
+import { AuthForm } from "./pages/auth/AuthForm";
 import { auth, myFirestore } from "./firebase";
 import { user } from "./types/user";
 import { list } from "./types/list";
-import { EditMenu } from "./EditMenu";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { Lists } from "./Lists";
-import { Header } from "./Header";
-import { ListsController } from "./ListsController";
+import { Lists } from "./pages/lists/Lists";
+import { Header } from "./pages/lists/Header";
+import { ListsController } from "./pages/lists/ListsController";
 import { useAuth } from "./contexts/AuthContext";
 
 const EditListContext = createContext<{

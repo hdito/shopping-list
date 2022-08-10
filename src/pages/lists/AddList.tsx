@@ -8,11 +8,11 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { MouseEvent, useState } from "react";
-import { Button } from "../Button";
-import { myFirestore } from "../firebase";
+import { Button } from "../../components/Button";
+import { myFirestore } from "../../firebase";
 import { AddListFormTab } from "./AddListFormTab";
 import short from "short-uuid";
-import { user } from "../types/user";
+import { user } from "../../types/user";
 
 export const AddList = ({ user }: { user: user }) => {
   const [isOpenAddForm, setIsOpenAddForm] = useState(false);
