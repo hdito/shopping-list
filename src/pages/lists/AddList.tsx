@@ -21,10 +21,10 @@ export const AddList = ({ user }: { user: user }) => {
   return (
     <div className={`${isOpenAddForm ? "px-0 xs:px-4" : "px-4"} w-full`}>
       <div
-        className={`m-auto max-w-sm flex flex-col gap-1 w-full ${
+        className={`${
           isOpenAddForm &&
-          " border-y-2 xs:border-2 shadow-md xs:rounded-md overflow-hidden"
-        }`}
+          " border-y-2 xs:border-2 border-slate-300 shadow-md xs:rounded-md overflow-hidden"
+        } m-auto max-w-sm flex flex-col gap-1 w-full`}
       >
         {isOpenAddForm ? (
           <>
@@ -35,8 +35,8 @@ export const AddList = ({ user }: { user: user }) => {
                 }}
                 className={`${
                   !isCreateNew
-                    ? "shadow-[inset_-2px_-1px_4px_rgb(0,0,0,0.1)] bg-gray-50"
-                    : "bg-white"
+                    ? "shadow-[inset_-2px_-1px_4px_rgb(0,0,0,0.1)] bg-slate-50"
+                    : "bg-transparent"
                 } flex-1 px-2 py-1 whitespace-nowrap`}
                 type="button"
               >
@@ -48,8 +48,8 @@ export const AddList = ({ user }: { user: user }) => {
                 }}
                 className={`${
                   isCreateNew
-                    ? "shadow-[inset_2px_-1px_4px_rgb(0,0,0,0.1)] bg-gray-50"
-                    : "bg-white"
+                    ? "shadow-[inset_2px_-1px_4px_rgb(0,0,0,0.1)] bg-slate-50"
+                    : "bg-transparent"
                 } flex-1 px-2 py-1 whitespace-nowrap`}
                 type="button"
               >

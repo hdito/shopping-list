@@ -45,7 +45,7 @@ export const CardWithSettings = ({
       {(props) => (
         <div className="rounded overflow-hidden shadow-sm border-2 border-slate-300 hover:shadow-md">
           <div
-            className={`h-10 flex items-center gap-1 p-1 pl-2 bg-slate-50 transition-all duration-100`}
+            className={`h-10 flex items-center gap-1 p-1 pl-2  transition-all duration-100`}
           >
             {isEditTitle ? (
               <>

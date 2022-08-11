@@ -8,14 +8,12 @@ import { list } from "../../types/list";
 import { myFirestore } from "../../firebase";
 import { user } from "../../types/user";
 import { IoTrashOutline } from "react-icons/io5";
+import { Link } from "react-router-dom";
 
 export const Card = ({ list, user }: { list: list; user: user }) => {
   return (
-    <div
-      key={list.id}
-      className="h-10 shadow-sm border-2 flex items-center gap-1 px-2 py-1 rounded bg-slate-100 hover:bg-slate-200 hover:rounded-md transition-all duration-100"
-    >
-      <h2 className="inline-block mr-auto">{list.title}</h2>
+    <div className="h-10 rounded border-2 border-slate-300 shadow-sm flex justify-between items-center gap-1 px-2 py-1 hover:shadow-md">
+      <Link to={list.id}>{list.title}</Link>
       <button
         onClick={() =>
           updateDoc(doc(myFirestore, "lists", list.id), {

@@ -18,13 +18,7 @@ import { IoSettingsOutline, IoTrashOutline } from "react-icons/io5";
 import { user } from "../../types/user";
 import { Card } from "./Card";
 import { CardWithSettings } from "./CardWithSettings";
-
-const sortByTime = (item1: list, item2: list) => {
-  const secondsDiff = item2.createdAt.seconds - item1.createdAt.seconds;
-  if (secondsDiff !== 0) {
-    return secondsDiff;
-  } else return item2.createdAt.nanoseconds - item1.createdAt.nanoseconds;
-};
+import { sortByTime } from "../../utils/sortByTime";
 
 export const Lists = ({
   isManageAccess,
@@ -97,7 +91,7 @@ export const Lists = ({
                 <h2 className="font-bold">My lists</h2>
                 {lists
                   .filter((list) => list.createdAt !== null)
-                  .sort((list1, list2) => sortByTime(list1, list2))
+                  .sort(sortByTime)
                   .map((list) => (
                     <CardWithSettings
                       key={list.id}
@@ -116,7 +110,7 @@ export const Lists = ({
                 <h2 className="font-bold">Shared</h2>
                 {shared
                   .filter((list) => list.createdAt !== null)
-                  .sort((list1, list2) => sortByTime(list1, list2))
+                  .sort(sortByTime)
                   .map((list) => (
                     <Card
                       key={list.id}
