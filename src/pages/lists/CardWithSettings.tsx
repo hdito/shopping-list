@@ -45,12 +45,12 @@ export const CardWithSettings = ({
       {(props) => (
         <div className="rounded overflow-hidden shadow-sm border-2 border-slate-300 hover:shadow-md">
           <div
-            className={`h-10 flex items-center gap-1 p-1 pl-2  transition-all duration-100`}
+            className={`h-10 flex items-center gap-1 p-1 pl-2 transition-all duration-100`}
           >
             {isEditTitle ? (
               <>
                 <Field
-                  className="bg-transparent border-y-2 border-t-transparent border-b-slate-300 hover:border-b-slate-500 focus-visible:outline-none focus:border-b-blue-500 focus-visible:border-b-blue-500"
+                  className="flex-shrink bg-transparent border-y-2 border-t-transparent border-b-slate-300 hover:border-b-slate-500 focus-visible:outline-none focus:border-b-blue-500 focus-visible:border-b-blue-500"
                   name="title"
                   type="text"
                 />
@@ -61,7 +61,13 @@ export const CardWithSettings = ({
                 </ErrorMessage>
               </>
             ) : (
-              <Link to={list.id}>{list.title}</Link>
+              <Link
+                to={list.id}
+                state={{ id: list.id, title: list.title }}
+                className="min-w-0 overflow-hidden whitespace-nowrap overflow-ellipsis"
+              >
+                {list.title}
+              </Link>
             )}
             {list.public && (
               <span className="bg-green-600 text-white px-1 py-0.5 rounded ml-auto">
@@ -94,7 +100,7 @@ export const CardWithSettings = ({
             <div className="h-10 p-1 bg-slate-300 flex gap-1">
               <button
                 disabled={isEditTitle}
-                className="flex items-center gap-1 rounded bg-slate-700 px-2 text-slate-50 disabled:opacity-50"
+                className="text-xs sm:text-base leading-none flex items-center gap-1 rounded bg-slate-700 px-2 text-slate-50 disabled:opacity-50"
                 onClick={() => {
                   setEditTitle(true);
                   onIsSettingsBlocked(true);
@@ -105,7 +111,7 @@ export const CardWithSettings = ({
               </button>
               <button
                 disabled={isEditTitle}
-                className="flex items-center gap-1 rounded bg-slate-700 px-2 text-slate-50 disabled:opacity-50"
+                className="text-xs sm:text-base leading-none flex items-center gap-1 rounded bg-slate-700 px-2 text-slate-50 disabled:opacity-50"
                 onClick={() => onManageAccess(list)}
               >
                 <IoPeople />
@@ -116,12 +122,12 @@ export const CardWithSettings = ({
                   <button
                     disabled={props.values.title === list.title}
                     onClick={props.submitForm}
-                    className="ml-auto px-2 py-0.5 rounded bg-blue-500 text-white disabled:opacity-50"
+                    className="text-sm sm:text-base ml-auto px-2 py-0.5 rounded bg-blue-500 text-white disabled:opacity-50"
                   >
                     Save
                   </button>
                   <button
-                    className="px-2 py-0.5 rounded border-slate-500 border-2 bg-slate-50"
+                    className="text-sm sm:text-base px-2 py-0.5 rounded border-slate-500 border-2 bg-slate-50"
                     onClick={() => {
                       setEditTitle(false);
                       onIsSettingsBlocked(false);

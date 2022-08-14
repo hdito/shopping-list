@@ -6,6 +6,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { Outlet } from "react-router-dom";
 import { myFirestore } from "../firebase";
 import { user } from "../types/user";
 import { useAuth } from "./AuthContext";
@@ -17,7 +18,7 @@ const FirestoreUserContext = createContext<{
 export const useFirestoreUserContext = () => {
   return useContext(FirestoreUserContext);
 };
-export const FirestoreUserProvider = ({ children }: PropsWithChildren) => {
+export const FirestoreUserProvider = () => {
   const [firestoreUser, setFirestoreUser] = useState<user | null>(null);
   const [loading, setLoading] = useState(true);
   const currentUser = useAuth();
@@ -43,7 +44,7 @@ export const FirestoreUserProvider = ({ children }: PropsWithChildren) => {
   }, []);
   return (
     <FirestoreUserContext.Provider value={{ firestoreUser, loading }}>
-      {children}
+      <Outlet />
     </FirestoreUserContext.Provider>
   );
 };

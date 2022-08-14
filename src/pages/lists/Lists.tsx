@@ -19,6 +19,7 @@ import { user } from "../../types/user";
 import { Card } from "./Card";
 import { CardWithSettings } from "./CardWithSettings";
 import { sortByTime } from "../../utils/sortByTime";
+import { ManageAccessMenu } from "./ManageAccessMenu";
 
 export const Lists = ({
   isManageAccess,
@@ -69,60 +70,54 @@ export const Lists = ({
   }, [loading]);
   return (
     <>
-      <main
-        className={`${
-          isManageAccess && "pointer-events-none"
-        } flex-1 max-w-prose flex flex-col items-center gap-2 w-full mt-2`}
-      >
-        {loadingLists || loadingShared ? (
-          "Loading..."
-        ) : (
-          <>
-            <AddList user={firestoreUser as user} />
-            {!lists.length && !shared.length ? (
-              <div className="text-gray-500 italic flex-1 flex items-center">
-                You haven't got any lists yet
-              </div>
-            ) : (
-              <></>
-            )}
-            {lists.length !== 0 && (
-              <div className="w-full pl-2 pr-4 border-l-8 border-black flex flex-col gap-1">
-                <h2 className="font-bold">My lists</h2>
-                {lists
-                  .filter((list) => list.createdAt !== null)
-                  .sort(sortByTime)
-                  .map((list) => (
-                    <CardWithSettings
-                      key={list.id}
-                      isSettingsBlocked={isSettingsBlocked}
-                      onListToEdit={setListToEdit}
-                      onIsSettingsBlocked={setIsSettingsBlocked}
-                      onManageAccess={onManageAccess}
-                      list={list}
-                      listToEdit={listToEdit}
-                    />
-                  ))}
-              </div>
-            )}
-            {shared.length !== 0 && (
-              <div className="w-full pl-2 pr-4 border-l-8 border-black flex flex-col gap-1">
-                <h2 className="font-bold">Shared</h2>
-                {shared
-                  .filter((list) => list.createdAt !== null)
-                  .sort(sortByTime)
-                  .map((list) => (
-                    <Card
-                      key={list.id}
-                      list={list}
-                      user={firestoreUser as user}
-                    />
-                  ))}
-              </div>
-            )}
-          </>
-        )}
-      </main>
+      {loadingLists || loadingShared ? (
+        "Loading..."
+      ) : (
+        <>
+          <AddList user={firestoreUser as user} />
+          {!lists.length && !shared.length ? (
+            <div className="text-gray-500 italic flex-1 flex items-center px-4">
+              You haven't got any lists yet
+            </div>
+          ) : (
+            <></>
+          )}
+          {lists.length !== 0 && (
+            <div className="w-full pl-2 pr-4 border-l-8 border-black flex flex-col gap-1">
+              <h2 className="font-bold">My lists</h2>
+              {lists
+                .filter((list) => list.createdAt !== null)
+                .sort(sortByTime)
+                .map((list) => (
+                  <CardWithSettings
+                    key={list.id}
+                    isSettingsBlocked={isSettingsBlocked}
+                    onListToEdit={setListToEdit}
+                    onIsSettingsBlocked={setIsSettingsBlocked}
+                    onManageAccess={onManageAccess}
+                    list={list}
+                    listToEdit={listToEdit}
+                  />
+                ))}
+            </div>
+          )}
+          {shared.length !== 0 && (
+            <div className="w-full pl-2 pr-4 border-l-8 border-black flex flex-col gap-1">
+              <h2 className="font-bold">Shared</h2>
+              {shared
+                .filter((list) => list.createdAt !== null)
+                .sort(sortByTime)
+                .map((list) => (
+                  <Card
+                    key={list.id}
+                    list={list}
+                    user={firestoreUser as user}
+                  />
+                ))}
+            </div>
+          )}
+        </>
+      )}
     </>
   );
 };

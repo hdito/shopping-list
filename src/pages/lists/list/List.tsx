@@ -10,7 +10,7 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { IoTrashOutline } from "react-icons/io5";
-import { useHref, useLocation, useMatch } from "react-router-dom";
+import { useHref, useLocation, useMatch, useParams } from "react-router-dom";
 import { myFirestore } from "../../../firebase";
 import { item } from "../../../types/item";
 import { list } from "../../../types/list";
@@ -21,30 +21,27 @@ import { AddItemForm } from "./AddItemForm";
 import { ItemCard } from "./ItemCard";
 
 export const List = () => {
-  const location = useLocation();
-  const listID = location.pathname.slice(
-    location.pathname.lastIndexOf("/") + 1
-  );
   const [items, setItems] = useState<item[]>([]);
   const [list, setList] = useState<list | null>(null);
   const [loadingItems, setLoadingItems] = useState(true);
   const [loadingList, setLoadingList] = useState(true);
   const [itemToEdit, setItemToEdit] = useState<string | null>(null);
   const [isSettingsBlocked, setIsSettingsBlocked] = useState(false);
-
+  const location = useLocation();
+  const { id } = useParams();
   useEffect(() => {
     console.log(
       location.pathname.slice(location.pathname.lastIndexOf("/") + 1)
     );
     const unsubscribeList = onSnapshot(
-      doc(myFirestore, "lists", listID),
+      doc(myFirestore, "lists", id as string),
       (docSnap) => {
         if (docSnap.exists()) setList(docSnap.data() as list);
         setLoadingList(false);
       }
     );
     const unsubscribeItems = onSnapshot(
-      query(collection(myFirestore, "lists", listID, "items")),
+      query(collection(myFirestore, "lists", id as string, "items")),
       (querySnap) => {
         const newItems: item[] = [];
         querySnap.forEach((docSnap) => {
@@ -60,11 +57,11 @@ export const List = () => {
     };
   }, []);
   return (
-    <main className="flex-1 max-w-prose flex flex-col items-center gap-2 w-full px-4 mt-2">
+    <>
       {(!loadingItems || !loadingList) && list ? (
         <>
           <AddItemForm list={list} />
-          <div className="flex flex-col gap-1 w-full h-full">
+          <div className="flex flex-col gap-1 w-full h-full px-2">
             {items.length !== 0 ? (
               <>
                 {items
@@ -80,7 +77,7 @@ export const List = () => {
                       onItemToEdit={setItemToEdit}
                       key={item.id}
                       item={item}
-                      listID={listID}
+                      listID={id as string}
                     />
                   ))}
               </>
@@ -96,6 +93,6 @@ export const List = () => {
       ) : (
         <>Loading...</>
       )}
-    </main>
+    </>
   );
 };
