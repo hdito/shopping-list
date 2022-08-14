@@ -35,7 +35,7 @@ export const ManageAccessMenu = ({
     >
       {(outerProps) => (
         <div className="absolute h-full w-full top-0 left-0 z-20 flex justify-center items-center bg-black/80">
-          <div className="flex flex-col gap-2 bg-white rounded p-2">
+          <div className="flex flex-col gap-2 bg-white rounded p-2 max-w-sm">
             <ul className="grid grid-cols-[auto_auto] gap-0.5 items-center list-decimal ">
               <h1 className="font-bold text-xl col-start-2">Manage access</h1>
               <li className="col-start-2">To share your list make it public</li>
@@ -133,7 +133,9 @@ export const ManageAccessMenu = ({
                 key={item}
                 className="flex justify-between rounded pl-2 pr-1 py-0.5 border-2 border-slate-500"
               >
-                {item}
+                <div className="min-w-0 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                  {item}
+                </div>
                 <button
                   className="text-gray-700 hover:text-black text-2xl"
                   onClick={() =>

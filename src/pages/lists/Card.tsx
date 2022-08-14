@@ -13,7 +13,11 @@ import { Link } from "react-router-dom";
 export const Card = ({ list, user }: { list: list; user: user }) => {
   return (
     <div className="h-10 rounded border-2 border-slate-300 shadow-sm flex justify-between items-center gap-1 px-2 py-1 hover:shadow-md">
-      <Link to={list.id} state={{ id: list.id, title: list.title }}>
+      <Link
+        to={list.id}
+        state={{ id: list.id, title: list.title }}
+        className="min-w-0 overflow-hidden whitespace-nowrap overflow-ellipsis"
+      >
         {list.title}
       </Link>
       <button
