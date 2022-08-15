@@ -1,4 +1,4 @@
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { doc, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
 import {
   createContext,
   PropsWithChildren,
@@ -36,9 +36,11 @@ export const FirestoreUserProvider = () => {
             uid: currentUser.uid,
             name: currentUser.displayName,
             email: currentUser.email,
+            createdAt: serverTimestamp(),
           });
         }
-      }
+      },
+      (userError) => console.log({ userError })
     );
     return unsubscribeFirestoreUser;
   }, []);

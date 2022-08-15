@@ -63,16 +63,17 @@ export const AddList = ({ user }: { user: user }) => {
                 onCancel={() => setIsOpenAddForm(false)}
                 onSave={async (title) => {
                   const id = short.generate().toString();
-                  await setDoc(doc(myFirestore, "lists", id), {
-                    title,
-                    id,
-                    owner: user.email,
-                    public: false,
-                    editors: [],
-                    admitted: [],
-                    createdAt: serverTimestamp(),
-                    updatedAt: serverTimestamp(),
-                  });
+                  try {
+                    await setDoc(doc(myFirestore, "lists", id), {
+                      title,
+                      id,
+                      owner: user.email,
+                      public: false,
+                      createdAt: serverTimestamp(),
+                    });
+                  } catch (addListError) {
+                    console.log(addListError);
+                  }
                   setIsOpenAddForm(false);
                 }}
               />
@@ -83,7 +84,7 @@ export const AddList = ({ user }: { user: user }) => {
                 onCancel={() => setIsOpenAddForm(false)}
                 onSave={async (id) => {
                   updateDoc(doc(myFirestore, "lists", id), {
-                    editors: arrayUnion(user.email),
+                    editor: user.email,
                     updatedAt: serverTimestamp(),
                   });
                   setIsOpenAddForm(false);

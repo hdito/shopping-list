@@ -1,4 +1,10 @@
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  deleteDoc,
+  doc,
+  FieldValue,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { ErrorMessage, Field, Formik } from "formik";
 import { useState } from "react";
 import { IoPencil, IoSettingsOutline, IoTrashOutline } from "react-icons/io5";
@@ -28,7 +34,11 @@ export const ItemCard = ({
       initialValues={{ title: item.title, isUrgent: item.isUrgent }}
       validationSchema={object({ title: string().required("Required") })}
       onSubmit={async (values, actions) => {
-        const newData: { title?: string; isUrgent?: boolean } = {};
+        const newData: {
+          title?: string;
+          isUrgent?: boolean;
+          updatedAt: FieldValue;
+        } = { updatedAt: serverTimestamp() };
         if (values.title !== item.title) newData.title = values.title;
         if (values.isUrgent !== item.isUrgent)
           newData.isUrgent = values.isUrgent;
@@ -67,7 +77,10 @@ export const ItemCard = ({
                     onChange={(e) =>
                       updateDoc(
                         doc(myFirestore, "lists", listID, "items", item.id),
-                        { isFinished: e.currentTarget.checked }
+                        {
+                          isFinished: e.currentTarget.checked,
+                          updatedAt: serverTimestamp(),
+                        }
                       )
                     }
                     className="flex-shrink-0 relative peer box-border rounded appearance-none w-5 h-5 border-2 border-slate-300 checked:before:content-['✓'] before:text-white before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 checked:bg-slate-700 checked:border-none"

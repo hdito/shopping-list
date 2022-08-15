@@ -8,7 +8,13 @@ import { list } from "../../types/list";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { object, string } from "yup";
 import { compareObjects } from "../../utils/compareObjects";
-import { doc, updateDoc } from "firebase/firestore";
+import {
+  deleteField,
+  doc,
+  FieldValue,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { myFirestore } from "../../firebase";
 
 export const ManageAccessMenu = ({
@@ -23,10 +29,17 @@ export const ManageAccessMenu = ({
     <Formik
       initialValues={{ public: list.public, admitted: list.admitted }}
       onSubmit={async (values) => {
-        const newData: { public?: boolean; admitted?: string[] } = {};
-        if (values.public) {
-          if (!compareObjects(values.admitted, list.admitted))
+        const newData: {
+          public?: boolean;
+          admitted?: string | FieldValue;
+          updatedAt: FieldValue;
+        } = { updatedAt: serverTimestamp() };
+        if (!(values.admitted === list.admitted)) {
+          if (!values.admitted) {
+            newData.admitted = deleteField();
+          } else {
             newData.admitted = values.admitted;
+          }
         }
         if (values.public !== list.public) newData.public = values.public;
         await updateDoc(doc(myFirestore, "lists", list.id), newData);
@@ -43,9 +56,7 @@ export const ManageAccessMenu = ({
                 <Field name="public" type="checkbox" id="public"></Field>
                 <label htmlFor="public">Public</label>
               </div>
-              <li className="col-start-2 mt-3">
-                Send list ID to other persons
-              </li>
+              <li className="col-start-2 mt-3">Send list ID to other person</li>
 
               <label htmlFor="id">Project ID</label>
               <div className="flex gap-1 items-center">
@@ -69,7 +80,9 @@ export const ManageAccessMenu = ({
                   </button>
                 </CopyToClipboard>
               </div>
-              <li className="col-start-2 mt-3">Add their email to your list</li>
+              <li className="col-start-2 mt-3">
+                Add person email to to your list
+              </li>
 
               <Formik
                 initialValues={{ email: "" }}
@@ -78,23 +91,13 @@ export const ManageAccessMenu = ({
                     .required("Required")
                     .email("Must be a valid email")
                     .test(
-                      "Unique",
-                      "Values need to be unique",
-                      (email) =>
-                        new Set([...outerProps.values.admitted, email]).size ===
-                        [...outerProps.values.admitted, email].length
-                    )
-                    .test(
                       "Owner",
                       "Can't add your own email",
                       (value) => value !== list.owner
                     ),
                 })}
                 onSubmit={(values, actions) => {
-                  outerProps.setFieldValue("admitted", [
-                    ...outerProps.values.admitted,
-                    values.email,
-                  ]);
+                  outerProps.setFieldValue("admitted", values.email);
                   actions.resetForm();
                 }}
               >
@@ -121,42 +124,35 @@ export const ManageAccessMenu = ({
                         className="rounded px-2 py-0.5 bg-slate-700 text-white disabled:opacity-50"
                         type="submit"
                       >
-                        Add
+                        {outerProps.values.admitted ? "Change" : "Add"}
                       </button>
                     </div>
                   </>
                 )}
               </Formik>
             </ul>
-            {outerProps.values.admitted.map((item) => (
-              <div
-                key={item}
-                className="flex justify-between rounded pl-2 pr-1 py-0.5 border-2 border-slate-500"
-              >
+            {outerProps.values.admitted && (
+              <div className="flex items-center gap-1">
+                <h2>Current editor:</h2>
                 <div className="min-w-0 overflow-hidden whitespace-nowrap overflow-ellipsis">
-                  {item}
+                  {outerProps.values.admitted}
                 </div>
                 <button
                   className="text-gray-700 hover:text-black text-2xl"
                   onClick={() =>
-                    outerProps.setFieldValue(
-                      "admitted",
-                      outerProps.values.admitted.filter(
-                        (filtering) => filtering !== item
-                      )
-                    )
+                    outerProps.setFieldValue("admitted", undefined)
                   }
                 >
                   <IoTrashOutline title="Delete email" />
                 </button>
               </div>
-            ))}
+            )}
             <div className="flex gap-1 col-span-2">
               <button
                 className="flex-1 px-2 py-0.5 rounded bg-blue-500 hover:shadow-sm shadow-blue-500 text-white disabled:opacity-50"
                 disabled={
                   list.public === outerProps.values.public &&
-                  compareObjects(list.admitted, outerProps.values.admitted)
+                  list.admitted === outerProps.values.admitted
                 }
                 onClick={outerProps.submitForm}
               >

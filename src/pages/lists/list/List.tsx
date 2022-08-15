@@ -4,6 +4,7 @@ import {
   deleteDoc,
   doc,
   onSnapshot,
+  orderBy,
   query,
   serverTimestamp,
   updateDoc,
@@ -22,26 +23,18 @@ import { ItemCard } from "./ItemCard";
 
 export const List = () => {
   const [items, setItems] = useState<item[]>([]);
-  const [list, setList] = useState<list | null>(null);
   const [loadingItems, setLoadingItems] = useState(true);
-  const [loadingList, setLoadingList] = useState(true);
   const [itemToEdit, setItemToEdit] = useState<string | null>(null);
   const [isSettingsBlocked, setIsSettingsBlocked] = useState(false);
-  const location = useLocation();
-  const { id } = useParams();
+  const params = useParams();
+  const id = params.id as string;
+
   useEffect(() => {
-    console.log(
-      location.pathname.slice(location.pathname.lastIndexOf("/") + 1)
-    );
-    const unsubscribeList = onSnapshot(
-      doc(myFirestore, "lists", id as string),
-      (docSnap) => {
-        if (docSnap.exists()) setList(docSnap.data() as list);
-        setLoadingList(false);
-      }
-    );
     const unsubscribeItems = onSnapshot(
-      query(collection(myFirestore, "lists", id as string, "items")),
+      query(
+        collection(myFirestore, "lists", id, "items"),
+        orderBy("createdAt", "desc")
+      ),
       (querySnap) => {
         const newItems: item[] = [];
         querySnap.forEach((docSnap) => {
@@ -53,20 +46,17 @@ export const List = () => {
     );
     return () => {
       unsubscribeItems();
-      unsubscribeList;
     };
   }, []);
   return (
     <>
-      {(!loadingItems || !loadingList) && list ? (
+      {!loadingItems ? (
         <>
-          <AddItemForm list={list} />
+          <AddItemForm listID={id} />
           <div className="flex flex-col gap-1 w-full h-full px-2">
             {items.length !== 0 ? (
               <>
                 {items
-                  .filter((item) => item.createdAt)
-                  .sort(sortByTime)
                   .sort(sortByIsUrgent)
                   .sort(sortByIsFinished)
                   .map((item) => (
@@ -77,7 +67,7 @@ export const List = () => {
                       onItemToEdit={setItemToEdit}
                       key={item.id}
                       item={item}
-                      listID={id as string}
+                      listID={id}
                     />
                   ))}
               </>

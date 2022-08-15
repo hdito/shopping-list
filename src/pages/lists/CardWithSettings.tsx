@@ -1,4 +1,4 @@
-import { deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, serverTimestamp, updateDoc } from "firebase/firestore";
 import {
   IoPencil,
   IoPeople,
@@ -36,6 +36,7 @@ export const CardWithSettings = ({
       onSubmit={async (values, actions) => {
         await updateDoc(doc(myFirestore, "lists", list.id), {
           title: values.title,
+          updatedAt: serverTimestamp(),
         });
         setEditTitle(false);
         actions.resetForm();

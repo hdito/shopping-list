@@ -3,6 +3,7 @@ import {
   doc,
   arrayRemove,
   serverTimestamp,
+  deleteField,
 } from "firebase/firestore";
 import { list } from "../../types/list";
 import { myFirestore } from "../../firebase";
@@ -23,7 +24,7 @@ export const Card = ({ list, user }: { list: list; user: user }) => {
       <button
         onClick={() =>
           updateDoc(doc(myFirestore, "lists", list.id), {
-            editors: arrayRemove(user.email),
+            editor: deleteField(),
             updatedAt: serverTimestamp(),
           })
         }

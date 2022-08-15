@@ -33,10 +33,12 @@ export const Header = ({ isManageAccess }: { isManageAccess: list | null }) => {
       setListTitle(state.title);
       return;
     }
-    getDoc(doc(myFirestore, "lists", id)).then((doc) => {
-      console.log("title loaded");
-      if (doc.exists()) setListTitle(doc.data().title);
-    });
+    getDoc(doc(myFirestore, "lists", id))
+      .then((doc) => {
+        console.log("title loaded");
+        if (doc.exists()) setListTitle(doc.data().title);
+      })
+      .catch((headerError) => console.log(headerError));
   }, [id]);
   const navigate = useNavigate();
   return (

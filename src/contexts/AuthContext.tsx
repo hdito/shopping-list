@@ -6,7 +6,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 
 const AuthContext = createContext<User | null>(null);

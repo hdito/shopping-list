@@ -1,0 +1,133 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userID} {
+
+      function isUserValid(user) {
+        return user != null &&
+        user.token.email_verified &&
+        user.uid == userID;
+      }
+
+      function isUserDataValid(userData, user) {
+        return userData.uid is string &&
+        userData.uid != '' &&
+        userData.uid == user.uid &&
+        userData.name is string &&
+        userData.name != '' &&
+        userData.email is string &&
+        userData.email != '' &&
+        userData.createdAt is timestamp
+      }
+
+      allow read: if isUserValid(request.auth);
+
+      allow create: if isUserValid(request.auth) &&
+        request.resource.data.keys().hasOnly(['uid', 'name', 'email', 'createdAt']) &&
+        isUserDataValid(request.resource.data, request.auth);
+    }
+
+    match /lists/{listID} {
+
+      function isUserValid(user) {
+        return user != null && user.token.email_verified;
+      }
+
+      function isCreateDataValid(data) {
+        return data.keys().hasOnly(['id', 'title', 'owner', 'public', 'createdAt']) &&
+        data.id is string &&
+        data.id != '' &&
+        data.id == listID &&
+        data.title is string &&
+        data.title != '' &&
+        data.owner is string &&
+        data.public is bool &&
+        data.createdAt is timestamp;
+      }
+
+      function hasPermission(user, data) {
+        return data.owner == user.token.email ||
+        (data.get('editor', '') == user.token.email &&
+        data.public == true);
+      }
+
+      function allowOwnerUpdateTitlePublicAdmitted(user, newData, oldData) {
+        return user.token.email == oldData.owner &&
+        newData.diff(oldData).affectedKeys().hasOnly(['title', 'public', 'admitted', 'updatedAt']) &&
+        (newData.get('title', '') is string &&
+        newData.get('title', '') != oldData.get('title', '') ||
+        newData.get('admitted', '') is string &&
+        newData.get('admitted', '') != oldData.get('admitted', '') ||
+        newData.public is bool &&
+        newData.public != oldData.public) &&
+        newData.updatedAt is timestamp;
+      }
+
+      function allowEditorUpdateEditor(user, newData, oldData) {
+        return newData.diff(oldData).affectedKeys().hasOnly(['editor', 'updatedAt']) &&
+        ((newData.size() == oldData.size() - 1) ||
+        newData.get('editor', '') == user.token.email &&
+        newData.get('editor', '') == oldData.get('editor', '')) &&
+        newData.updatedAt is timestamp;
+      }
+
+      allow read: if isUserValid(request.auth) && hasPermission(request.auth, resource.data);
+
+      allow create: if isUserValid(request.auth) &&
+        request.auth.token.email == request.resource.data.owner &&
+        isCreateDataValid(request.resource.data);
+
+      allow update: if isUserValid(request.auth) &&
+        (allowOwnerUpdateTitlePublicAdmitted(request.auth, request.resource.data, resource.data) ||
+        allowEditorUpdateEditor(request.auth, request.resource.data, resource.data));
+
+      allow delete: if isUserValid(request.auth) &&
+        request.auth.token.email == resource.data.owner;
+      
+      match /items/{itemID} {
+
+        function checkPermission(user) {
+          return get(/databases/$(database)/documents/lists/$(listID)).data.owner == user.token.email ||
+          (get(/databases/$(database)/documents/lists/$(listID)).data.get('editor', '') == user.token.email &&
+          get(/databases/$(database)/documents/lists/$(listID)).data.public == true);
+        }
+
+        function checkNewItemValid(item) {
+          return item.keys().hasOnly(['id', 'title', 'isFinished', 'isUrgent', 'createdAt']) &&
+          item.id is string &&
+          item.id != '' &&
+          item.title is string &&
+          item.title != '' &&
+          item.isFinished is bool &&
+          item.isUrgent is bool &&
+          item.createdAt is timestamp
+        }
+
+        function checkItemUpdateValid(updatedItem, oldItem) {
+          return updatedItem.diff(oldItem).affectedKeys().hasOnly(['title', 'isFinished', 'isUrgent', 'updatedAt']) &&
+          updatedItem.title is string &&
+          updatedItem.title != '' &&
+          updatedItem.title != oldItem.title ||
+          updatedItem.isFinished is bool &&
+          updatedItem.isFinished != oldItem.isFinished ||
+          updatedItem.isUrgent is bool &&
+          updatedItem.isUrgent != oldItem.isFinished
+        }
+
+        allow read: if isUserValid(request.auth) &&
+          checkPermission(request.auth);
+
+        allow create: if isUserValid(request.auth) &&
+          checkPermission(request.auth) &&
+          checkNewItemValid(request.resource.data);
+
+        allow update: if isUserValid(request.auth) &&
+          checkPermission(request.auth) &&
+          checkItemUpdateValid(request.resource.data, resource.data);
+
+        allow delete: if isUserValid(request.auth) &&
+          checkPermission(request.auth);
+      }
+    }
+  }
+}

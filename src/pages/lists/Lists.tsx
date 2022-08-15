@@ -8,6 +8,7 @@ import {
   updateDoc,
   arrayRemove,
   serverTimestamp,
+  orderBy,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useFirestoreUserContext } from "../../contexts/FirestoreUserContext";
@@ -39,22 +40,30 @@ export const Lists = ({
     console.log({ loading, firestoreUser });
     if (loading || !firestoreUser) return;
     console.log("passed!");
+
     const unsubscribeLists = onSnapshot(
       query(
         collection(myFirestore, "lists"),
-        where("owner", "==", firestoreUser.email)
+        where("owner", "==", firestoreUser.email),
+        orderBy("createdAt", "desc")
       ),
       (querySnap) => {
         const newLists: list[] = [];
         querySnap.forEach((doc) => newLists.push(doc.data() as list));
         setLists(newLists);
         setLoadingLists(false);
+      },
+      (listsError) => {
+        console.log({ listsError });
+        setLoadingLists(false);
       }
     );
     const unsubscribeShared = onSnapshot(
       query(
         collection(myFirestore, "lists"),
-        where("editors", "array-contains", firestoreUser.email)
+        where("editor", "==", firestoreUser.email),
+        where("public", "==", true),
+        orderBy("createdAt", "desc")
       ),
       (querySnap) => {
         const newLists: list[] = [];
@@ -85,35 +94,25 @@ export const Lists = ({
           {lists.length !== 0 && (
             <div className="w-full pl-2 pr-4 border-l-8 border-black flex flex-col gap-1">
               <h2 className="font-bold">My lists</h2>
-              {lists
-                .filter((list) => list.createdAt !== null)
-                .sort(sortByTime)
-                .map((list) => (
-                  <CardWithSettings
-                    key={list.id}
-                    isSettingsBlocked={isSettingsBlocked}
-                    onListToEdit={setListToEdit}
-                    onIsSettingsBlocked={setIsSettingsBlocked}
-                    onManageAccess={onManageAccess}
-                    list={list}
-                    listToEdit={listToEdit}
-                  />
-                ))}
+              {lists.map((list) => (
+                <CardWithSettings
+                  key={list.id}
+                  isSettingsBlocked={isSettingsBlocked}
+                  onListToEdit={setListToEdit}
+                  onIsSettingsBlocked={setIsSettingsBlocked}
+                  onManageAccess={onManageAccess}
+                  list={list}
+                  listToEdit={listToEdit}
+                />
+              ))}
             </div>
           )}
           {shared.length !== 0 && (
             <div className="w-full pl-2 pr-4 border-l-8 border-black flex flex-col gap-1">
               <h2 className="font-bold">Shared</h2>
-              {shared
-                .filter((list) => list.createdAt !== null)
-                .sort(sortByTime)
-                .map((list) => (
-                  <Card
-                    key={list.id}
-                    list={list}
-                    user={firestoreUser as user}
-                  />
-                ))}
+              {shared.map((list) => (
+                <Card key={list.id} list={list} user={firestoreUser as user} />
+              ))}
             </div>
           )}
         </>

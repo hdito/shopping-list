@@ -6,5 +6,5 @@ export interface item {
   isFinished: boolean;
   isUrgent: boolean;
   createdAt: Timestamp;
-  updatedAt: Timestamp;
+  updatedAt?: Timestamp;
 }

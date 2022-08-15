@@ -11,20 +11,19 @@ import { object, string } from "yup";
 import { myFirestore } from "../../../firebase";
 import { list } from "../../../types/list";
 
-export const AddItemForm = ({ list }: { list: list }) => {
+export const AddItemForm = ({ listID }: { listID: string }) => {
   return (
     <Formik
       initialValues={{ title: "" }}
       validationSchema={object({ title: string().required("Required") })}
       onSubmit={async ({ title }, actions) => {
-        const id = short.generate();
-        await setDoc(doc(myFirestore, "lists", list.id, "items", id), {
-          id,
+        const itemID = short.generate();
+        await setDoc(doc(myFirestore, "lists", listID, "items", itemID), {
+          id: itemID,
           title,
           isFinished: false,
           isUrgent: false,
           createdAt: serverTimestamp(),
-          updatedAt: serverTimestamp(),
         });
         actions.resetForm();
       }}

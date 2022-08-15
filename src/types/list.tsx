@@ -4,9 +4,9 @@ export interface list {
   id: string;
   owner: string;
   title: string;
-  editors: string[];
   public: boolean;
-  admitted: string[];
-  updatedAt: Timestamp;
+  editor?: string;
+  admitted?: string;
   createdAt: Timestamp;
+  updatedAt?: Timestamp;
 }
