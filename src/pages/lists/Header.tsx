@@ -5,8 +5,6 @@ import { IoChevronBack } from "react-icons/io5";
 import {
   Link,
   Outlet,
-  Route,
-  Routes,
   useLocation,
   useNavigate,
   useParams,

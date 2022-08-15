@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { useState } from "react";
 import { AuthForm } from "./pages/auth/AuthForm";
 import { list } from "./types/list";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -60,12 +60,7 @@ function App() {
             >
               <Route
                 index
-                element={
-                  <Lists
-                    isManageAccess={isManageAccess}
-                    onManageAccess={setIsManageAccess}
-                  />
-                }
+                element={<Lists onManageAccess={setIsManageAccess} />}
               />
               <Route path=":id" element={<List />} />
             </Route>

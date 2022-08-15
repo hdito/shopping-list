@@ -1,13 +1,8 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import {
-  IoCopyOutline,
-  IoTrashBinOutline,
-  IoTrashOutline,
-} from "react-icons/io5";
+import { ErrorMessage, Field, Formik } from "formik";
+import { IoCopyOutline, IoTrashOutline } from "react-icons/io5";
 import { list } from "../../types/list";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { object, string } from "yup";
-import { compareObjects } from "../../utils/compareObjects";
 import {
   deleteField,
   doc,

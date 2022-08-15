@@ -2,7 +2,6 @@ import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
   sendEmailVerification,
-  sendSignInLinkToEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -11,9 +10,8 @@ import {
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-import { object, ref, string } from "yup";
+import { object, string } from "yup";
 import { Button } from "../../components/Button";
 import { ErrorMsg } from "./ErrorMsg";
 import { auth } from "../../firebase";

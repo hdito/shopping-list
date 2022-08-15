@@ -1,23 +1,10 @@
-import {
-  arrayRemove,
-  collection,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  orderBy,
-  query,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { IoTrashOutline } from "react-icons/io5";
-import { useHref, useLocation, useMatch, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { myFirestore } from "../../../firebase";
 import { item } from "../../../types/item";
-import { list } from "../../../types/list";
 import { sortByIsFinished } from "../../../utils/sortByIsFinished";
 import { sortByIsUrgent } from "../../../utils/sortByIsUrgent";
-import { sortByTime } from "../../../utils/sortByTime";
 import { AddItemForm } from "./AddItemForm";
 import { ItemCard } from "./ItemCard";
 

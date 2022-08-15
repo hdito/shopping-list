@@ -1,7 +1,6 @@
 import {
   updateDoc,
   doc,
-  arrayRemove,
   serverTimestamp,
   deleteField,
 } from "firebase/firestore";

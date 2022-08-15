@@ -3,11 +3,6 @@ import {
   query,
   collection,
   where,
-  deleteDoc,
-  doc,
-  updateDoc,
-  arrayRemove,
-  serverTimestamp,
   orderBy,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -15,18 +10,13 @@ import { useFirestoreUserContext } from "../../contexts/FirestoreUserContext";
 import { list } from "../../types/list";
 import { myFirestore } from "../../firebase";
 import { AddList } from "./AddList";
-import { IoSettingsOutline, IoTrashOutline } from "react-icons/io5";
 import { user } from "../../types/user";
 import { Card } from "./Card";
 import { CardWithSettings } from "./CardWithSettings";
-import { sortByTime } from "../../utils/sortByTime";
-import { ManageAccessMenu } from "./ManageAccessMenu";
 
 export const Lists = ({
-  isManageAccess,
   onManageAccess,
 }: {
-  isManageAccess: list | null;
   onManageAccess: (list: list | null) => void;
 }) => {
   const [lists, setLists] = useState<list[]>([]);

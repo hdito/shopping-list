@@ -11,7 +11,6 @@ import { IoPencil, IoSettingsOutline, IoTrashOutline } from "react-icons/io5";
 import { object, string } from "yup";
 import { myFirestore } from "../../../firebase";
 import { item } from "../../../types/item";
-import { List } from "./List";
 
 export const ItemCard = ({
   listID,

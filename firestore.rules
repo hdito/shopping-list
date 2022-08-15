@@ -105,13 +105,13 @@ service cloud.firestore {
 
         function checkItemUpdateValid(updatedItem, oldItem) {
           return updatedItem.diff(oldItem).affectedKeys().hasOnly(['title', 'isFinished', 'isUrgent', 'updatedAt']) &&
-          updatedItem.title is string &&
+          (updatedItem.title is string &&
           updatedItem.title != '' &&
           updatedItem.title != oldItem.title ||
           updatedItem.isFinished is bool &&
           updatedItem.isFinished != oldItem.isFinished ||
           updatedItem.isUrgent is bool &&
-          updatedItem.isUrgent != oldItem.isFinished
+          updatedItem.isUrgent != oldItem.isUrgent)
         }
 
         allow read: if isUserValid(request.auth) &&
