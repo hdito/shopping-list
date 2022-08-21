@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import { useFirestoreUserContext } from "../../contexts/FirestoreUserContext";
 import { list } from "../../types/list";
 import { myFirestore } from "../../firebase";
-import { AddList } from "./AddList";
+import { AddListForm } from "./AddListForm";
 import { user } from "../../types/user";
 import { Card } from "./Card";
 import { CardWithSettings } from "./CardWithSettings";
@@ -27,10 +27,7 @@ export const Lists = ({
   const [isSettingsBlocked, setIsSettingsBlocked] = useState(false);
   const { firestoreUser, loading } = useFirestoreUserContext();
   useEffect(() => {
-    console.log({ loading, firestoreUser });
     if (loading || !firestoreUser) return;
-    console.log("passed!");
-
     const unsubscribeLists = onSnapshot(
       query(
         collection(myFirestore, "lists"),
@@ -73,7 +70,7 @@ export const Lists = ({
         "Loading..."
       ) : (
         <>
-          <AddList user={firestoreUser as user} />
+          <AddListForm user={firestoreUser as user} />
           {!lists.length && !shared.length ? (
             <div className="text-gray-500 italic flex-1 flex items-center px-4">
               You haven't got any lists yet

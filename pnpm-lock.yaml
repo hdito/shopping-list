@@ -4,16 +4,19 @@ specifiers:
   '@types/react': ^18.0.15
   '@types/react-copy-to-clipboard': ^5.0.4
   '@types/react-dom': ^18.0.6
+  '@types/react-toggle': ^4.0.3
   '@vitejs/plugin-react': ^2.0.0
   autoprefixer: ^10.4.7
   firebase: ^9.9.1
   formik: ^2.2.9
   postcss: ^8.4.14
+  prop-types: ^15.8.1
   react: ^18.2.0
   react-copy-to-clipboard: ^5.1.0
   react-dom: ^18.2.0
   react-icons: ^4.4.0
   react-router-dom: ^6.3.0
+  react-toggle: ^4.1.3
   short-uuid: ^4.2.0
   tailwindcss: ^3.1.6
   typescript: ^4.6.4
@@ -30,12 +33,15 @@ devDependencies:
   '@types/react': 18.0.15
   '@types/react-copy-to-clipboard': 5.0.4
   '@types/react-dom': 18.0.6
+  '@types/react-toggle': 4.0.3
   '@vitejs/plugin-react': 2.0.0_vite@3.0.2
   firebase: 9.9.1
   formik: 2.2.9_react@18.2.0
+  prop-types: 15.8.1
   react-copy-to-clipboard: 5.1.0_react@18.2.0
   react-icons: 4.4.0_react@18.2.0
   react-router-dom: 6.3.0_biqbaboplfbrettd7655fr4n2y
+  react-toggle: 4.1.3_v2m5e27vhdewzwhryxwfaorcca
   short-uuid: 4.2.0
   tailwindcss: 3.1.6
   typescript: 4.7.4
@@ -949,6 +955,12 @@ packages:
       '@types/react': 18.0.15
     dev: true
 
+  /@types/react-toggle/4.0.3:
+    resolution: {integrity: sha512-57QdMWeeQdRjM2/p+udgYerxUbSkmeUIW18kwUttcci6GHkgxoqCsDZfRtsCsAHcvvM5VBQdtDUEgLWo2e87mA==}
+    dependencies:
+      '@types/react': 18.0.15
+    dev: true
+
   /@types/react/18.0.15:
     resolution: {integrity: sha512-iz3BtLuIYH1uWdsv6wXYdhozhqj20oD4/Hk2DNXIn1kFsmp9x8d9QB6FnPhfkbhd2PgEONt9Q1x/ebkwjfFLow==}
     dependencies:
@@ -1112,6 +1124,10 @@ packages:
       readdirp: 3.6.0
     optionalDependencies:
       fsevents: 2.3.2
+    dev: true
+
+  /classnames/2.3.1:
+    resolution: {integrity: sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==}
     dev: true
 
   /cliui/7.0.4:
@@ -2036,6 +2052,19 @@ packages:
     dependencies:
       history: 5.3.0
       react: 18.2.0
+    dev: true
+
+  /react-toggle/4.1.3_v2m5e27vhdewzwhryxwfaorcca:
+    resolution: {integrity: sha512-WoPrvbwfQSvoagbrDnXPrlsxwzuhQIrs+V0I162j/s+4XPgY/YDAUmHSeWiroznfI73wj+MBydvW95zX8ABbSg==}
+    peerDependencies:
+      prop-types: '>= 15.3.0 < 19'
+      react: '>= 15.3.0 < 19'
+      react-dom: '>= 15.3.0 < 19'
+    dependencies:
+      classnames: 2.3.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
     dev: true
 
   /react/18.2.0:

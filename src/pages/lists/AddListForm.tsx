@@ -1,11 +1,11 @@
 import { doc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { useState } from "react";
 import { myFirestore } from "../../firebase";
-import { AddListFormTab } from "./AddListFormTab";
+import { AddListTab } from "./AddListTab";
 import short from "short-uuid";
 import { user } from "../../types/user";
 
-export const AddList = ({ user }: { user: user }) => {
+export const AddListForm = ({ user }: { user: user }) => {
   const [isOpenAddForm, setIsOpenAddForm] = useState(false);
   const [isCreateNew, setIsCreateNew] = useState(true);
 
@@ -15,7 +15,7 @@ export const AddList = ({ user }: { user: user }) => {
         className={`${
           isOpenAddForm &&
           " border-y-2 xs:border-2 border-slate-300 shadow-md xs:rounded-md overflow-hidden"
-        } m-auto max-w-sm flex flex-col gap-1 w-full`}
+        } m-auto flex flex-col gap-1 w-fit`}
       >
         {isOpenAddForm ? (
           <>
@@ -28,7 +28,7 @@ export const AddList = ({ user }: { user: user }) => {
                   !isCreateNew
                     ? "shadow-[inset_-2px_-1px_4px_rgb(0,0,0,0.1)] bg-slate-50"
                     : "bg-transparent"
-                } flex-1 px-2 py-1 whitespace-nowrap`}
+                } px-4 py-1 whitespace-nowrap`}
                 type="button"
               >
                 Create new
@@ -41,14 +41,14 @@ export const AddList = ({ user }: { user: user }) => {
                   isCreateNew
                     ? "shadow-[inset_2px_-1px_4px_rgb(0,0,0,0.1)] bg-slate-50"
                     : "bg-transparent"
-                } flex-1 px-2 py-1 whitespace-nowrap`}
+                } px-4 py-1 whitespace-nowrap text-start`}
                 type="button"
               >
                 Add existing list
               </button>
             </div>
             {isCreateNew ? (
-              <AddListFormTab
+              <AddListTab
                 value="title"
                 label="Title"
                 onCancel={() => setIsOpenAddForm(false)}
@@ -62,30 +62,34 @@ export const AddList = ({ user }: { user: user }) => {
                       public: false,
                       createdAt: serverTimestamp(),
                     });
+                    setIsOpenAddForm(false);
                   } catch (addListError) {
                     console.log(addListError);
                   }
-                  setIsOpenAddForm(false);
                 }}
               />
             ) : (
-              <AddListFormTab
+              <AddListTab
                 label="Project ID"
                 value="id"
                 onCancel={() => setIsOpenAddForm(false)}
                 onSave={async (id) => {
-                  updateDoc(doc(myFirestore, "lists", id), {
-                    editor: user.email,
-                    updatedAt: serverTimestamp(),
-                  });
-                  setIsOpenAddForm(false);
+                  try {
+                    updateDoc(doc(myFirestore, "lists", id), {
+                      editor: user.email,
+                      updatedAt: serverTimestamp(),
+                    }).then((doc) => console.log(doc));
+                    setIsOpenAddForm(false);
+                  } catch (error) {
+                    console.log(error);
+                  }
                 }}
               />
             )}
           </>
         ) : (
           <button
-            className="rounded px-2 py-1 bg-black text-white hover:bg-gray-700 hover:shadow-md transition-all duration-100 "
+            className="rounded px-8 py-1 bg-black text-white hover:bg-gray-700 hover:shadow-md transition-all duration-100 "
             onClick={() => setIsOpenAddForm(true)}
           >
             Add list

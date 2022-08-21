@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "shopping-list-1e7b4"
-  }
+    "default": "shopping-list-dev-154df",
+    "dev": "shopping-list-dev-154df",
+    "production": "shopping-list-1e7b4"
+  },
+  "targets": {},
+  "etags": {}
 }

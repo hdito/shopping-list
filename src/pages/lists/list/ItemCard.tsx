@@ -11,7 +11,7 @@ import { IoPencil, IoSettingsOutline, IoTrashOutline } from "react-icons/io5";
 import { object, string } from "yup";
 import { myFirestore } from "../../../firebase";
 import { item } from "../../../types/item";
-
+import Toggle from "react-toggle";
 export const ItemCard = ({
   listID,
   item,
@@ -33,17 +33,19 @@ export const ItemCard = ({
       initialValues={{ title: item.title, isUrgent: item.isUrgent }}
       validationSchema={object({ title: string().required("Required") })}
       onSubmit={async (values, actions) => {
-        const newData: {
-          title?: string;
-          isUrgent?: boolean;
-          updatedAt: FieldValue;
-        } = { updatedAt: serverTimestamp() };
-        if (values.title !== item.title) newData.title = values.title;
-        if (values.isUrgent !== item.isUrgent)
-          newData.isUrgent = values.isUrgent;
-        await updateDoc(doc(myFirestore, "lists", listID, "items", item.id), {
-          ...newData,
-        });
+        if (values.title !== item.title || values.isUrgent !== item.isUrgent) {
+          const newData: {
+            title?: string;
+            isUrgent?: boolean;
+            updatedAt: FieldValue;
+          } = { updatedAt: serverTimestamp() };
+          if (values.title !== item.title) newData.title = values.title;
+          if (values.isUrgent !== item.isUrgent)
+            newData.isUrgent = values.isUrgent;
+          await updateDoc(doc(myFirestore, "lists", listID, "items", item.id), {
+            ...newData,
+          });
+        }
         actions.resetForm({ values: { ...values } });
         setIsEditTitle(false);
         onIsSettingsBlocked(false);
@@ -129,19 +131,16 @@ export const ItemCard = ({
           </div>
           {itemToEdit === item.id && (
             <div className="h-10 p-1 pl-2 bg-slate-300 flex gap-2 items-center">
-              <div className="text-sm sm:text-base flex gap-1 items-center">
-                <Field id="isUrgent" type="checkbox" name="isUrgent" />
-                <label className="leading-none" htmlFor="isUrgent">
-                  Make urgent
-                </label>
-              </div>
+              <label className="text-sm sm:text-base flex gap-1 items-center leading-none">
+                <Field type="checkbox" name="isUrgent" />
+                Make urgent
+              </label>
               <button
                 className="text-sm sm:text-base leading-none flex h-full items-center gap-1 rounded bg-slate-700 px-2 text-slate-50 disabled:opacity-50 mr-auto"
                 onClick={() => {
                   setIsEditTitle(true);
                   onIsSettingsBlocked(true);
                 }}
-                disabled={isEditTitle}
               >
                 <IoPencil />
                 Edit title
@@ -153,10 +152,6 @@ export const ItemCard = ({
                   onClick={() => {
                     props.submitForm();
                   }}
-                  disabled={
-                    props.values.title === item.title &&
-                    props.values.isUrgent === item.isUrgent
-                  }
                 >
                   Save
                 </button>
@@ -167,9 +162,6 @@ export const ItemCard = ({
                     props.resetForm();
                     onIsSettingsBlocked(false);
                   }}
-                  disabled={
-                    !(isEditTitle || props.values.isUrgent !== item.isUrgent)
-                  }
                 >
                   Cancel
                 </button>

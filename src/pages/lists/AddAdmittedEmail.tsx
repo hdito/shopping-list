@@ -1,6 +1,7 @@
 import { Formik, Field, FieldProps, ErrorMessage } from "formik";
 import { object, string } from "yup";
 import { Button } from "../../components/Button";
+import { CustomInput } from "../../components/CustomInput";
 import { Input } from "../../components/Input";
 
 export const AddAdmittedEmail = ({
@@ -31,22 +32,17 @@ export const AddAdmittedEmail = ({
     >
       {({ handleSubmit }) => (
         <>
-          <label className="justify-self-end" htmlFor="editor-email">
-            Editor's email
-          </label>
-          <div>
-            <Field name="email">
-              {({ field }: { field: FieldProps }) => (
-                <Input id="editor-email" type="email" {...field} />
-              )}
-            </Field>
+          <label className="flex flex-col gap-0.5" htmlFor="editor-email">
+            <div className="font-bold">Editor's email</div>
             <ErrorMessage name="email">
-              {(msg) => <div className="font-bold text-red-800">{msg}</div>}
+              {(msg) => <div className="text-red-600">{msg}</div>}
             </ErrorMessage>
-            <Button className="ml-1" onClick={handleSubmit} type="submit">
-              Add
-            </Button>
-          </div>
+            <CustomInput name="email" type="email" />
+          </label>
+
+          <Button className="ml-1" onClick={handleSubmit} type="submit">
+            Add
+          </Button>
         </>
       )}
     </Formik>

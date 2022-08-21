@@ -1,13 +1,14 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyATjjuRavTJxeAvBj0w6lPfj-ZJf4CXw9s",
-  authDomain: "shopping-list-1e7b4.firebaseapp.com",
-  projectId: "shopping-list-1e7b4",
-  storageBucket: "shopping-list-1e7b4.appspot.com",
-  messagingSenderId: "560367968750",
-  appId: "1:560367968750:web:17081b35a89b825bb6aeff",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
 };
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth();

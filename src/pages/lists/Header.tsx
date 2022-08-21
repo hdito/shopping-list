@@ -19,6 +19,7 @@ export const Header = ({ isManageAccess }: { isManageAccess: list | null }) => {
   const { firestoreUser, loading } = useFirestoreUserContext();
   const [listTitle, setListTitle] = useState<string | null>(null);
   const { id } = useParams();
+  const navigate = useNavigate();
   const location = useLocation();
   const state = location.state as { id?: string; title?: string } | null;
 
@@ -33,12 +34,14 @@ export const Header = ({ isManageAccess }: { isManageAccess: list | null }) => {
     }
     getDoc(doc(myFirestore, "lists", id))
       .then((doc) => {
-        console.log("title loaded");
         if (doc.exists()) setListTitle(doc.data().title);
+        else {
+          navigate("/");
+        }
       })
       .catch((headerError) => console.log(headerError));
   }, [id]);
-  const navigate = useNavigate();
+
   return (
     <>
       <header

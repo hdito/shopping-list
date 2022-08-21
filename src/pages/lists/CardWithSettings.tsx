@@ -34,10 +34,12 @@ export const CardWithSettings = ({
       }}
       validationSchema={object({ title: string().required("Required") })}
       onSubmit={async (values, actions) => {
-        await updateDoc(doc(myFirestore, "lists", list.id), {
-          title: values.title,
-          updatedAt: serverTimestamp(),
-        });
+        if (values.title !== list.title) {
+          updateDoc(doc(myFirestore, "lists", list.id), {
+            title: values.title,
+            updatedAt: serverTimestamp(),
+          });
+        }
         setEditTitle(false);
         actions.resetForm();
         onIsSettingsBlocked(false);
@@ -100,8 +102,7 @@ export const CardWithSettings = ({
           {listToEdit === list.id && (
             <div className="h-10 p-1 bg-slate-300 flex gap-1">
               <button
-                disabled={isEditTitle}
-                className="text-xs sm:text-base leading-none flex items-center gap-1 rounded bg-slate-700 px-2 text-slate-50 disabled:opacity-50"
+                className="text-xs sm:text-base leading-none flex items-center gap-1 rounded bg-slate-700 px-2 text-slate-50"
                 onClick={() => {
                   setEditTitle(true);
                   onIsSettingsBlocked(true);
@@ -111,8 +112,7 @@ export const CardWithSettings = ({
                 Edit title
               </button>
               <button
-                disabled={isEditTitle}
-                className="text-xs sm:text-base leading-none flex items-center gap-1 rounded bg-slate-700 px-2 text-slate-50 disabled:opacity-50"
+                className="text-xs sm:text-base leading-none flex items-center gap-1 rounded bg-slate-700 px-2 text-slate-50"
                 onClick={() => onManageAccess(list)}
               >
                 <IoPeople />
@@ -121,9 +121,8 @@ export const CardWithSettings = ({
               {isEditTitle && (
                 <>
                   <button
-                    disabled={props.values.title === list.title}
                     onClick={props.submitForm}
-                    className="text-sm sm:text-base ml-auto px-2 py-0.5 rounded bg-blue-500 text-white disabled:opacity-50"
+                    className="text-sm sm:text-base ml-auto px-2 py-0.5 rounded bg-blue-500 text-white"
                   >
                     Save
                   </button>

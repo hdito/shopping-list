@@ -8,6 +8,7 @@ import {
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import short from "short-uuid";
 import { object, string } from "yup";
+import { CustomInput } from "../../../components/CustomInput";
 import { myFirestore } from "../../../firebase";
 import { list } from "../../../types/list";
 
@@ -29,16 +30,15 @@ export const AddItemForm = ({ listID }: { listID: string }) => {
       }}
     >
       <div className="px-2 w-full">
-        <Form className="m-auto flex gap-2 max-w-xs w-full items-center rounded border-2 border-slate-300 shadow-md px-2 py-2">
-          <label htmlFor="title-input">Title</label>
-          <Field
-            id="title-input"
-            className="flex-1 min-w-[3rem] border-y-2 border-t-transparent border-b-slate-300  hover:border-b-slate-500 focus-visible:outline-none bg-transparent focus:border-b-blue-500 focus-visible:border-b-blue-500"
-            name="title"
-          />
-          <ErrorMessage name="title">
-            {(msg) => <span className="font-bold text-red-800">{msg}</span>}
-          </ErrorMessage>
+        <Form className="m-auto flex gap-2 flex-col w-fit rounded border-2 border-slate-300 shadow-md px-2 py-2">
+          <label className="flex flex-col gap-1" htmlFor="title-input">
+            <div className="font-bold">Title</div>
+            <ErrorMessage name="title">
+              {(msg) => <div className="text-red-600">{msg}</div>}
+            </ErrorMessage>
+            <CustomInput id="title-input" name="title" type="text" />
+          </label>
+
           <button
             className="rounded bg-slate-700 text-white px-2 py-0.5"
             type="submit"

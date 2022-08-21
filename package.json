@@ -21,6 +21,7 @@
     "@vitejs/plugin-react": "^2.0.0",
     "firebase": "^9.9.1",
     "formik": "^2.2.9",
+    "prop-types": "^15.8.1",
     "react-copy-to-clipboard": "^5.1.0",
     "react-icons": "^4.4.0",
     "react-router-dom": "^6.3.0",

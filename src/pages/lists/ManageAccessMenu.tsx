@@ -11,6 +11,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 import { myFirestore } from "../../firebase";
+import { CustomInput } from "../../components/CustomInput";
 
 export const ManageAccessMenu = ({
   isManageAccess,
@@ -24,27 +25,36 @@ export const ManageAccessMenu = ({
     <Formik
       initialValues={{ public: list.public, admitted: list.admitted }}
       onSubmit={async (values) => {
-        const newData: {
-          public?: boolean;
-          admitted?: string | FieldValue;
-          updatedAt: FieldValue;
-        } = { updatedAt: serverTimestamp() };
-        if (!(values.admitted === list.admitted)) {
-          if (!values.admitted) {
-            newData.admitted = deleteField();
-          } else {
-            newData.admitted = values.admitted;
+        if (
+          values.admitted !== list.admitted ||
+          values.public !== list.public
+        ) {
+          try {
+            const newData: {
+              public?: boolean;
+              admitted?: string | FieldValue;
+              updatedAt: FieldValue;
+            } = { updatedAt: serverTimestamp() };
+            if (!(values.admitted === list.admitted)) {
+              if (!values.admitted) {
+                newData.admitted = deleteField();
+              } else {
+                newData.admitted = values.admitted;
+              }
+            }
+            if (values.public !== list.public) newData.public = values.public;
+            updateDoc(doc(myFirestore, "lists", list.id), newData);
+          } catch (manageAccesError) {
+            console.log(manageAccesError);
           }
         }
-        if (values.public !== list.public) newData.public = values.public;
-        await updateDoc(doc(myFirestore, "lists", list.id), newData);
         onClose();
       }}
     >
       {(outerProps) => (
         <div className="absolute h-full w-full top-0 left-0 z-20 flex justify-center items-center bg-black/80">
-          <div className="flex flex-col gap-2 bg-white rounded p-2 max-w-sm">
-            <ul className="grid grid-cols-[auto_auto] gap-0.5 items-center list-decimal ">
+          <div className="flex flex-col gap-2 bg-white rounded p-2 max-w-sm w-fit">
+            <ul className="flex flex-col gap-2 px-8 list-decimal ">
               <h1 className="font-bold text-xl col-start-2">Manage access</h1>
               <li className="col-start-2">To share your list make it public</li>
               <div className="flex gap-1 col-start-2">
@@ -53,10 +63,11 @@ export const ManageAccessMenu = ({
               </div>
               <li className="col-start-2 mt-3">Send list ID to other person</li>
 
-              <label htmlFor="id">Project ID</label>
-              <div className="flex gap-1 items-center">
+              <label className="flex flex-col gap-0.5">
+                <div className="font-bold">Project ID</div>
+
                 <input
-                  className="flex-shrink bg-transparent border-y-2 border-t-transparent border-b-slate-500 hover:border-b-slate-700 focus-visible:outline-none focus:border-b-blue-500"
+                  className="box-border px-2 py-1 border-2 rounded bg-transparent focus-visible:outline-none"
                   value={list.id}
                   id="id"
                   readOnly
@@ -68,13 +79,13 @@ export const ManageAccessMenu = ({
                       (e.currentTarget.lastChild as HTMLElement).textContent =
                         "Copied!";
                     }}
-                    className="flex gap-1 items-center border-2 border-slate-500 text-slate-800 rounded px-1"
+                    className="self-start flex gap-1 items-center border-2 border-slate-500 text-slate-800 rounded px-1"
                   >
                     <IoCopyOutline />
                     <span>Copy ID</span>
                   </button>
                 </CopyToClipboard>
-              </div>
+              </label>
               <li className="col-start-2 mt-3">
                 Add person email to to your list
               </li>
@@ -97,43 +108,36 @@ export const ManageAccessMenu = ({
                 }}
               >
                 {(innerProps) => (
-                  <>
-                    <label className="justify-self-end" htmlFor="email">
-                      Email
-                    </label>
-                    <div className="flex gap-1">
-                      <Field
-                        className="bg-transparent border-y-2 border-t-transparent border-b-slate-500 hover:border-b-slate-700 focus-visible:outline-none focus:border-b-blue-500"
-                        id="email"
-                        name="email"
-                        type="email"
-                      />
+                  <div className="flex flex-col gap-2 w-fit">
+                    <label
+                      className="flex flex-col gap-0.5 w-fit"
+                      htmlFor="email"
+                    >
+                      <div className="font-bold">Email</div>
                       <ErrorMessage name="email">
-                        {(msg) => (
-                          <div className="font-bold text-red-800">{msg}</div>
-                        )}
+                        {(msg) => <div className="text-red-600">{msg}</div>}
                       </ErrorMessage>
-                      <button
-                        onClick={innerProps.submitForm}
-                        disabled={!innerProps.isValid}
-                        className="rounded px-2 py-0.5 bg-slate-700 text-white disabled:opacity-50"
-                        type="submit"
-                      >
-                        {outerProps.values.admitted ? "Change" : "Add"}
-                      </button>
-                    </div>
-                  </>
+                      <CustomInput id="email" name="email" type="email" />
+                    </label>
+                    <button
+                      onClick={innerProps.submitForm}
+                      className="rounded px-2 py-0.5 bg-slate-700 text-white disabled:opacity-50"
+                      type="submit"
+                    >
+                      {outerProps.values.admitted ? "Change" : "Add"}
+                    </button>
+                  </div>
                 )}
               </Formik>
             </ul>
             {outerProps.values.admitted && (
               <div className="flex items-center gap-1">
-                <h2>Current editor:</h2>
-                <div className="min-w-0 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                <h2 className="font-bold">Current editor:</h2>
+                <div className="min-w-0 max-w-[100px] overflow-hidden whitespace-nowrap overflow-ellipsis">
                   {outerProps.values.admitted}
                 </div>
                 <button
-                  className="text-gray-700 hover:text-black text-2xl"
+                  className="ml-auto text-gray-700 hover:text-black text-2xl"
                   onClick={() =>
                     outerProps.setFieldValue("admitted", undefined)
                   }
@@ -145,10 +149,6 @@ export const ManageAccessMenu = ({
             <div className="flex gap-1 col-span-2">
               <button
                 className="flex-1 px-2 py-0.5 rounded bg-blue-500 hover:shadow-sm shadow-blue-500 text-white disabled:opacity-50"
-                disabled={
-                  list.public === outerProps.values.public &&
-                  list.admitted === outerProps.values.admitted
-                }
                 onClick={outerProps.submitForm}
               >
                 Save
