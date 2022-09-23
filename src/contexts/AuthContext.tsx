@@ -19,7 +19,6 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
-      console.log({ user });
       setCurrentUser(user);
       setLoading(false);
     });

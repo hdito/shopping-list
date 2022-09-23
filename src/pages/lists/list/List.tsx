@@ -31,9 +31,7 @@ export const List = () => {
         setLoadingItems(false);
       }
     );
-    return () => {
-      unsubscribeItems();
-    };
+    return unsubscribeItems;
   }, []);
   return (
     <>

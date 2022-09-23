@@ -63,7 +63,7 @@ export const Lists = ({
       unsubscribeLists();
       unsubscribeShared();
     };
-  }, [loading]);
+  }, [firestoreUser]);
   return (
     <>
       {loadingLists || loadingShared ? (

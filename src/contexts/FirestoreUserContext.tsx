@@ -40,10 +40,10 @@ export const FirestoreUserProvider = () => {
           });
         }
       },
-      (userError) => console.log({ userError })
+      (userError) => alert(userError.message)
     );
     return unsubscribeFirestoreUser;
-  }, []);
+  }, [currentUser]);
   return (
     <FirestoreUserContext.Provider value={{ firestoreUser, loading }}>
       <Outlet />
