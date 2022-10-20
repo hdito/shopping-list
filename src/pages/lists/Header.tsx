@@ -1,19 +1,19 @@
-import { signOut } from "firebase/auth";
-import { getDoc, doc } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { IoChevronBack } from "react-icons/io5";
+import { signOut } from 'firebase/auth';
+import { getDoc, doc } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { IoChevronBack } from 'react-icons/io5';
 import {
   Link,
   Outlet,
   useLocation,
   useNavigate,
   useParams,
-} from "react-router-dom";
-import { Button } from "../../components/Button";
-import { useFirestoreUserContext } from "../../contexts/FirestoreUserContext";
-import { auth, myFirestore } from "../../firebase";
-import { list } from "../../types/list";
-import { user } from "../../types/user";
+} from 'react-router-dom';
+import { Button } from '../../components/Button';
+import { useFirestoreUserContext } from '../../contexts/FirestoreUserContext';
+import { auth, myFirestore } from '../../firebase';
+import { list } from '../../types/list';
+import { user } from '../../types/user';
 
 export const Header = ({ isManageAccess }: { isManageAccess: list | null }) => {
   const { firestoreUser, loading } = useFirestoreUserContext();
@@ -32,11 +32,11 @@ export const Header = ({ isManageAccess }: { isManageAccess: list | null }) => {
       setListTitle(state.title);
       return;
     }
-    getDoc(doc(myFirestore, "lists", id))
+    getDoc(doc(myFirestore, 'lists', id))
       .then((doc) => {
         if (doc.exists()) setListTitle(doc.data().title);
         else {
-          navigate("/");
+          navigate('/');
         }
       })
       .catch((headerError) => console.log(headerError));
@@ -46,11 +46,11 @@ export const Header = ({ isManageAccess }: { isManageAccess: list | null }) => {
     <>
       <header
         className={`${
-          isManageAccess && "pointer-events-none"
+          isManageAccess && 'pointer-events-none'
         } flex gap-2 items-center justify-between px-4 py-2 text-lg shadow-md shadow-slate-300 border-b-2 border-slate-300 z-10 sticky bg-white top-0  w-full overflow-hidden`}
       >
         {loading ? (
-          "Loading..."
+          'Loading...'
         ) : (
           <>
             {id && (
@@ -66,12 +66,12 @@ export const Header = ({ isManageAccess }: { isManageAccess: list | null }) => {
                 </h1>
               </>
             )}
-            <div className={`${!id && "ml-auto"} flex items-center gap-1`}>
+            <div className={`${!id && 'ml-auto'} flex items-center gap-1`}>
               {(firestoreUser as user).name}
               <Button
                 onClick={async () => {
                   await signOut(auth);
-                  navigate("/");
+                  navigate('/');
                 }}
               >
                 Sign out

@@ -1,6 +1,6 @@
-import { Outlet, useParams } from "react-router-dom";
-import { list } from "../../types/list";
-import { ManageAccessMenu } from "./ManageAccessMenu";
+import { Outlet, useParams } from 'react-router-dom';
+import { list } from '../../types/list';
+import { ManageAccessMenu } from './ManageAccessMenu';
 
 export const PageLayout = ({
   isManageAccess,
@@ -14,7 +14,7 @@ export const PageLayout = ({
     <>
       <main
         className={`${
-          !params?.id && isManageAccess && "pointer-events-none"
+          !params?.id && isManageAccess && 'pointer-events-none'
         } flex-1 max-w-prose flex flex-col items-center gap-2 w-full`}
       >
         <Outlet />

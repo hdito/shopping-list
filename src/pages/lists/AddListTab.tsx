@@ -1,6 +1,6 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { object, string } from "yup";
-import { CustomInput } from "../../components/CustomInput";
+import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { object, string } from 'yup';
+import { CustomInput } from '../../components/CustomInput';
 
 export const AddListTab = ({
   value,
@@ -16,9 +16,9 @@ export const AddListTab = ({
   return (
     <Formik
       key={value}
-      initialValues={{ [value]: "" }}
+      initialValues={{ [value]: '' }}
       validationSchema={object({
-        [value]: string().required("Required"),
+        [value]: string().required('Required'),
       })}
       onSubmit={(values, actions) => {
         onSave(values[value]);

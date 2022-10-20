@@ -4,14 +4,14 @@ import {
   FieldValue,
   serverTimestamp,
   updateDoc,
-} from "firebase/firestore";
-import { ErrorMessage, Field, Formik } from "formik";
-import { useState } from "react";
-import { IoPencil, IoSettingsOutline, IoTrashOutline } from "react-icons/io5";
-import { object, string } from "yup";
-import { myFirestore } from "../../../firebase";
-import { item } from "../../../types/item";
-import Toggle from "react-toggle";
+} from 'firebase/firestore';
+import { ErrorMessage, Field, Formik } from 'formik';
+import { useState } from 'react';
+import { IoPencil, IoSettingsOutline, IoTrashOutline } from 'react-icons/io5';
+import { object, string } from 'yup';
+import { myFirestore } from '../../../firebase';
+import { item } from '../../../types/item';
+
 export const ItemCard = ({
   listID,
   item,
@@ -31,7 +31,7 @@ export const ItemCard = ({
   return (
     <Formik
       initialValues={{ title: item.title, isUrgent: item.isUrgent }}
-      validationSchema={object({ title: string().required("Required") })}
+      validationSchema={object({ title: string().required('Required') })}
       onSubmit={async (values, actions) => {
         if (values.title !== item.title || values.isUrgent !== item.isUrgent) {
           const newData: {
@@ -42,7 +42,7 @@ export const ItemCard = ({
           if (values.title !== item.title) newData.title = values.title;
           if (values.isUrgent !== item.isUrgent)
             newData.isUrgent = values.isUrgent;
-          await updateDoc(doc(myFirestore, "lists", listID, "items", item.id), {
+          await updateDoc(doc(myFirestore, 'lists', listID, 'items', item.id), {
             ...newData,
           });
         }
@@ -52,7 +52,7 @@ export const ItemCard = ({
         onItemToEdit(null);
       }}
     >
-      {(props) => (
+      {({ resetForm, submitForm }) => (
         <div className="w-full rounded overflow-hidden shadow-sm border-2 border-slate-300 hover:shadow-md">
           <div className="h-10 flex items-center gap-1 justify-between px-2 py-1">
             <div className="flex flex-1 items-center gap-1 min-w-0">
@@ -77,7 +77,7 @@ export const ItemCard = ({
                     id={`${item.id}-is-finished`}
                     onChange={(e) =>
                       updateDoc(
-                        doc(myFirestore, "lists", listID, "items", item.id),
+                        doc(myFirestore, 'lists', listID, 'items', item.id),
                         {
                           isFinished: e.currentTarget.checked,
                           updatedAt: serverTimestamp(),
@@ -99,7 +99,7 @@ export const ItemCard = ({
               {item.isUrgent && (
                 <div
                   className={`${
-                    item.isFinished && "opacity-50"
+                    item.isFinished && 'opacity-50'
                   } rounded font-bold bg-orange-600 text-white px-2 h-full flex items-center`}
                 >
                   Urgent
@@ -111,7 +111,7 @@ export const ItemCard = ({
                   if (isSettingsBlocked) return;
                   if (itemToEdit === item.id) {
                     onItemToEdit(null);
-                    props.resetForm();
+                    resetForm();
                   } else {
                     onItemToEdit(item.id);
                   }
@@ -121,7 +121,7 @@ export const ItemCard = ({
               </button>
               <button
                 onClick={() =>
-                  deleteDoc(doc(myFirestore, "lists", listID, "items", item.id))
+                  deleteDoc(doc(myFirestore, 'lists', listID, 'items', item.id))
                 }
                 className="text-gray-700 hover:text-black text-2xl"
               >
@@ -150,7 +150,7 @@ export const ItemCard = ({
                 <button
                   className="text-sm sm:text-base px-2 h-full rounded bg-blue-500 text-white disabled:opacity-50"
                   onClick={() => {
-                    props.submitForm();
+                    submitForm();
                   }}
                 >
                   Save
@@ -159,7 +159,7 @@ export const ItemCard = ({
                   className="text-sm sm:text-base px-2 h-full rounded border-slate-500 border-2 bg-slate-50 disabled:opacity-50"
                   onClick={() => {
                     setIsEditTitle(false);
-                    props.resetForm();
+                    resetForm();
                     onIsSettingsBlocked(false);
                   }}
                 >

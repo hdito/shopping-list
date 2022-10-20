@@ -1,15 +1,14 @@
-import { doc, onSnapshot, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
 import {
   createContext,
-  PropsWithChildren,
   useContext,
   useEffect,
   useState,
-} from "react";
-import { Outlet } from "react-router-dom";
-import { myFirestore } from "../firebase";
-import { user } from "../types/user";
-import { useAuth } from "./AuthContext";
+} from 'react';
+import { Outlet } from 'react-router-dom';
+import { myFirestore } from '../firebase';
+import { user } from '../types/user';
+import { useAuth } from './AuthContext';
 
 const FirestoreUserContext = createContext<{
   firestoreUser: user | null;
@@ -26,13 +25,13 @@ export const FirestoreUserProvider = () => {
   useEffect(() => {
     if (!currentUser) return;
     const unsubscribeFirestoreUser = onSnapshot(
-      doc(myFirestore, "users", currentUser.uid),
+      doc(myFirestore, 'users', currentUser.uid),
       (docSnap) => {
         if (docSnap.exists()) {
           setFirestoreUser(docSnap.data() as user);
           setLoading(false);
         } else {
-          setDoc(doc(myFirestore, "users", currentUser.uid), {
+          setDoc(doc(myFirestore, 'users', currentUser.uid), {
             uid: currentUser.uid,
             name: currentUser.displayName,
             email: currentUser.email,

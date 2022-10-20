@@ -1,4 +1,4 @@
-import { IoClose } from "react-icons/io5";
+import { IoClose } from 'react-icons/io5';
 
 export const ErrorMsg = ({
   onClose,

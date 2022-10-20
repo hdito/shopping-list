@@ -3,12 +3,12 @@ import {
   doc,
   serverTimestamp,
   deleteField,
-} from "firebase/firestore";
-import { list } from "../../types/list";
-import { myFirestore } from "../../firebase";
-import { user } from "../../types/user";
-import { IoTrashOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
+} from 'firebase/firestore';
+import { list } from '../../types/list';
+import { myFirestore } from '../../firebase';
+import { user } from '../../types/user';
+import { IoTrashOutline } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
 
 export const Card = ({ list, user }: { list: list; user: user }) => {
   return (
@@ -22,7 +22,7 @@ export const Card = ({ list, user }: { list: list; user: user }) => {
       </Link>
       <button
         onClick={() =>
-          updateDoc(doc(myFirestore, "lists", list.id), {
+          updateDoc(doc(myFirestore, 'lists', list.id), {
             editor: deleteField(),
             updatedAt: serverTimestamp(),
           })

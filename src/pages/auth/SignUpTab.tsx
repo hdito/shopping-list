@@ -2,13 +2,13 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
   sendEmailVerification,
-} from "firebase/auth";
-import { Formik, Form, ErrorMessage, Field } from "formik";
-import { object, string } from "yup";
-import { Button } from "../../components/Button";
-import { CustomInput } from "../../components/CustomInput";
-import { PasswordInput } from "../../components/PasswordInput";
-import { auth } from "../../firebase";
+} from 'firebase/auth';
+import { Formik, Form, ErrorMessage } from 'formik';
+import { object, string } from 'yup';
+import { Button } from '../../components/Button';
+import { CustomInput } from '../../components/CustomInput';
+import { PasswordInput } from '../../components/PasswordInput';
+import { auth } from '../../firebase';
 
 export const SignUpTab = ({
   onError,
@@ -23,16 +23,16 @@ export const SignUpTab = ({
       <Formik
         key="sign-up"
         initialValues={{
-          name: "",
-          email: "",
-          password: "",
+          name: '',
+          email: '',
+          password: '',
         }}
         validationSchema={object({
-          name: string().required("Required"),
-          email: string().required("Required"),
+          name: string().required('Required'),
+          email: string().required('Required'),
           password: string()
-            .min(6, "Password should be at least 6 characters long")
-            .required("Required"),
+            .min(6, 'Password should be at least 6 characters long')
+            .required('Required'),
         })}
         onSubmit={async (values, actions) => {
           try {

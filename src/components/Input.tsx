@@ -1,6 +1,3 @@
-import { FieldInputProps, FieldMetaProps, FormikState } from "formik";
-import { useEffect } from "react";
-
 export const Input = ({ className, ...props }: { className?: string }) => {
   return (
     <input

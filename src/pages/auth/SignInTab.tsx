@@ -3,15 +3,15 @@ import {
   signOut,
   signInWithPopup,
   GoogleAuthProvider,
-} from "firebase/auth";
-import { Formik, Form, ErrorMessage } from "formik";
-import { FcGoogle } from "react-icons/fc";
-import { useNavigate } from "react-router-dom";
-import { object, string } from "yup";
-import { Button } from "../../components/Button";
-import { CustomInput } from "../../components/CustomInput";
-import { PasswordInput } from "../../components/PasswordInput";
-import { auth } from "../../firebase";
+} from 'firebase/auth';
+import { Formik, Form, ErrorMessage } from 'formik';
+import { FcGoogle } from 'react-icons/fc';
+import { useNavigate } from 'react-router-dom';
+import { object, string } from 'yup';
+import { Button } from '../../components/Button';
+import { CustomInput } from '../../components/CustomInput';
+import { PasswordInput } from '../../components/PasswordInput';
+import { auth } from '../../firebase';
 
 export const SignInTab = ({ onError }: { onError: (error: Error) => void }) => {
   const navigate = useNavigate();
@@ -20,12 +20,12 @@ export const SignInTab = ({ onError }: { onError: (error: Error) => void }) => {
       <h2 className="font-bold">Use your account</h2>
       <Formik
         key="sign-in"
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ email: '', password: '' }}
         validationSchema={object({
-          email: string().email("Must be a valid email").required("Required"),
+          email: string().email('Must be a valid email').required('Required'),
           password: string()
-            .min(6, "Password must be at least 6 characters ")
-            .required("Required"),
+            .min(6, 'Password must be at least 6 characters ')
+            .required('Required'),
         })}
         onSubmit={async (values) => {
           try {
@@ -35,10 +35,10 @@ export const SignInTab = ({ onError }: { onError: (error: Error) => void }) => {
               values.password
             );
             if (user.emailVerified) {
-              navigate("/lists", { replace: true });
+              navigate('/lists', { replace: true });
             } else {
               await signOut(auth);
-              throw new Error("Email isn't verified");
+              throw new Error('Email is not verified');
             }
           } catch (error) {
             onError(error as Error);
@@ -67,7 +67,7 @@ export const SignInTab = ({ onError }: { onError: (error: Error) => void }) => {
           </Button>
         </Form>
       </Formik>
-      <div className="font-bold">Or</div>{" "}
+      <div className="font-bold">Or</div>{' '}
       <Button
         onClick={async () => {
           try {
@@ -75,7 +75,7 @@ export const SignInTab = ({ onError }: { onError: (error: Error) => void }) => {
           } catch (error) {
             onError(error as Error);
           }
-          navigate("/");
+          navigate('/');
         }}
         type="button"
         className="flex items-center gap-2"

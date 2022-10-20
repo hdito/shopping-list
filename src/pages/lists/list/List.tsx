@@ -1,12 +1,12 @@
-import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { myFirestore } from "../../../firebase";
-import { item } from "../../../types/item";
-import { sortByIsFinished } from "../../../utils/sortByIsFinished";
-import { sortByIsUrgent } from "../../../utils/sortByIsUrgent";
-import { AddItemForm } from "./AddItemForm";
-import { ItemCard } from "./ItemCard";
+import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { myFirestore } from '../../../firebase';
+import { item } from '../../../types/item';
+import { sortByIsFinished } from '../../../utils/sortByIsFinished';
+import { sortByIsUrgent } from '../../../utils/sortByIsUrgent';
+import { AddItemForm } from './AddItemForm';
+import { ItemCard } from './ItemCard';
 
 export const List = () => {
   const [items, setItems] = useState<item[]>([]);
@@ -19,8 +19,8 @@ export const List = () => {
   useEffect(() => {
     const unsubscribeItems = onSnapshot(
       query(
-        collection(myFirestore, "lists", id, "items"),
-        orderBy("createdAt", "desc")
+        collection(myFirestore, 'lists', id, 'items'),
+        orderBy('createdAt', 'desc')
       ),
       (querySnap) => {
         const newItems: item[] = [];

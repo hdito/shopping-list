@@ -1,8 +1,7 @@
-import { Formik, Field, FieldProps, ErrorMessage } from "formik";
-import { object, string } from "yup";
-import { Button } from "../../components/Button";
-import { CustomInput } from "../../components/CustomInput";
-import { Input } from "../../components/Input";
+import { ErrorMessage, Formik } from 'formik';
+import { object, string } from 'yup';
+import { Button } from '../../components/Button';
+import { CustomInput } from '../../components/CustomInput';
 
 export const AddAdmittedEmail = ({
   admitted,
@@ -14,12 +13,12 @@ export const AddAdmittedEmail = ({
   return (
     <Formik
       key="editor"
-      initialValues={{ email: "" }}
+      initialValues={{ email: '' }}
       validationSchema={object({
         email: string()
-          .required("Required")
-          .email("Should be a valid email")
-          .test("Unique", "Emails need to be unique", (email) => {
+          .required('Required')
+          .email('Should be a valid email')
+          .test('Unique', 'Emails need to be unique', (email) => {
             return (
               new Set([...admitted, email]).size === [...admitted, email].length
             );
@@ -33,7 +32,7 @@ export const AddAdmittedEmail = ({
       {({ handleSubmit }) => (
         <>
           <label className="flex flex-col gap-0.5" htmlFor="editor-email">
-            <div className="font-bold">Editor's email</div>
+            <div className="font-bold">Editor&apos;s email</div>
             <ErrorMessage name="email">
               {(msg) => <div className="text-red-600">{msg}</div>}
             </ErrorMessage>

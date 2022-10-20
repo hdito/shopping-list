@@ -1,11 +1,11 @@
-import { useField } from "formik";
-import { useState } from "react";
+import { useField } from 'formik';
+import { useState } from 'react';
 import {
   IoCheckmark,
   IoEyeOffOutline,
   IoEyeOutline,
   IoWarning,
-} from "react-icons/io5";
+} from 'react-icons/io5';
 
 export const PasswordInput = ({
   name,
@@ -16,7 +16,7 @@ export const PasswordInput = ({
   name: string;
 }) => {
   const [field, meta] = useField(name);
-  const [type, setType] = useState<"password" | "text">("password");
+  const [type, setType] = useState<'password' | 'text'>('password');
   return (
     <div className="relative">
       <input
@@ -25,8 +25,8 @@ export const PasswordInput = ({
         type={type}
         id={id}
         className={`px-2 py-1 pr-10 box-border border-2 rounded bg-transparent focus-visible:outline-none focus:border-blue-500 focus-visible:border-blue-500 invalid:border-red-600  ${
-          meta.error && meta.touched && "border-red-600"
-        } ${!meta.error && meta.touched && "border-green-600"}`}
+          meta.error && meta.touched && 'border-red-600'
+        } ${!meta.error && meta.touched && 'border-green-600'}`}
       />
       {meta.touched && meta.error && (
         <IoWarning
@@ -44,13 +44,13 @@ export const PasswordInput = ({
         type="button"
         onClick={() =>
           setType((prev) => {
-            if (prev === "password") return "text";
-            return "password";
+            if (prev === 'password') return 'text';
+            return 'password';
           })
         }
         className="absolute right-1.5 top-1/2 -translate-y-1/2"
       >
-        {type === "password" ? (
+        {type === 'password' ? (
           <IoEyeOutline title="Show" />
         ) : (
           <IoEyeOffOutline title="Hide" />

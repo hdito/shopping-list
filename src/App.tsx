@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { AuthForm } from "./pages/auth/AuthForm";
-import { list } from "./types/list";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { Lists } from "./pages/lists/Lists";
-import { Header } from "./pages/lists/Header";
-import { useAuth } from "./contexts/AuthContext";
-import { FirestoreUserProvider } from "./contexts/FirestoreUserContext";
-import { List } from "./pages/lists/list/List";
-import { PageLayout } from "./pages/lists/PageLayout";
+import { useState } from 'react';
+import { AuthForm } from './pages/auth/AuthForm';
+import { list } from './types/list';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { Lists } from './pages/lists/Lists';
+import { Header } from './pages/lists/Header';
+import { useAuth } from './contexts/AuthContext';
+import { FirestoreUserProvider } from './contexts/FirestoreUserContext';
+import { List } from './pages/lists/list/List';
+import { PageLayout } from './pages/lists/PageLayout';
 
 function App() {
   const [isManageAccess, setIsManageAccess] = useState<list | null>(null);

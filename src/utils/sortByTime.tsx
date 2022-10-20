@@ -1,4 +1,4 @@
-import { Timestamp } from "firebase/firestore";
+import { Timestamp } from 'firebase/firestore';
 
 export const sortByTime = (
   { createdAt: createdAt1 }: { createdAt: Timestamp },

@@ -1,25 +1,18 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import short from "short-uuid";
-import { object, string } from "yup";
-import { CustomInput } from "../../../components/CustomInput";
-import { myFirestore } from "../../../firebase";
-import { list } from "../../../types/list";
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { ErrorMessage, Form, Formik } from 'formik';
+import short from 'short-uuid';
+import { object, string } from 'yup';
+import { CustomInput } from '../../../components/CustomInput';
+import { myFirestore } from '../../../firebase';
 
 export const AddItemForm = ({ listID }: { listID: string }) => {
   return (
     <Formik
-      initialValues={{ title: "" }}
-      validationSchema={object({ title: string().required("Required") })}
+      initialValues={{ title: '' }}
+      validationSchema={object({ title: string().required('Required') })}
       onSubmit={async ({ title }, actions) => {
         const itemID = short.generate();
-        await setDoc(doc(myFirestore, "lists", listID, "items", itemID), {
+        await setDoc(doc(myFirestore, 'lists', listID, 'items', itemID), {
           id: itemID,
           title,
           isFinished: false,

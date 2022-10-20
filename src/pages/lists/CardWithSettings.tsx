@@ -1,16 +1,16 @@
-import { deleteDoc, doc, serverTimestamp, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import {
   IoPencil,
   IoPeople,
   IoSettingsOutline,
   IoTrashOutline,
-} from "react-icons/io5";
-import { list } from "../../types/list";
-import { myFirestore } from "../../firebase";
-import { useState } from "react";
-import { ErrorMessage, Field, Formik } from "formik";
-import { object, string } from "yup";
-import { Link } from "react-router-dom";
+} from 'react-icons/io5';
+import { list } from '../../types/list';
+import { myFirestore } from '../../firebase';
+import { useState } from 'react';
+import { ErrorMessage, Field, Formik } from 'formik';
+import { object, string } from 'yup';
+import { Link } from 'react-router-dom';
 export const CardWithSettings = ({
   list,
   listToEdit,
@@ -32,10 +32,10 @@ export const CardWithSettings = ({
       initialValues={{
         title: list.title,
       }}
-      validationSchema={object({ title: string().required("Required") })}
+      validationSchema={object({ title: string().required('Required') })}
       onSubmit={async (values, actions) => {
         if (values.title !== list.title) {
-          updateDoc(doc(myFirestore, "lists", list.id), {
+          updateDoc(doc(myFirestore, 'lists', list.id), {
             title: values.title,
             updatedAt: serverTimestamp(),
           });
@@ -79,7 +79,7 @@ export const CardWithSettings = ({
             )}
             <button
               className={`${
-                !list.public && "ml-auto"
+                !list.public && 'ml-auto'
               } text-gray-700 hover:text-black text-2xl`}
               onClick={() => {
                 if (isSettingsBlocked) return;
@@ -93,7 +93,7 @@ export const CardWithSettings = ({
               <IoSettingsOutline title="Settings" />
             </button>
             <button
-              onClick={() => deleteDoc(doc(myFirestore, "lists", list.id))}
+              onClick={() => deleteDoc(doc(myFirestore, 'lists', list.id))}
               className="text-gray-700 hover:text-black text-2xl"
             >
               <IoTrashOutline title="Delete" />

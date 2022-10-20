@@ -1,12 +1,12 @@
-import { onAuthStateChanged, signOut, User } from "firebase/auth";
+import { onAuthStateChanged, User } from 'firebase/auth';
 import {
   createContext,
   PropsWithChildren,
   useContext,
   useEffect,
   useState,
-} from "react";
-import { auth } from "../firebase";
+} from 'react';
+import { auth } from '../firebase';
 
 const AuthContext = createContext<User | null>(null);
 

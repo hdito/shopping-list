@@ -4,15 +4,15 @@ import {
   collection,
   where,
   orderBy,
-} from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { useFirestoreUserContext } from "../../contexts/FirestoreUserContext";
-import { list } from "../../types/list";
-import { myFirestore } from "../../firebase";
-import { AddListForm } from "./AddListForm";
-import { user } from "../../types/user";
-import { Card } from "./Card";
-import { CardWithSettings } from "./CardWithSettings";
+} from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { useFirestoreUserContext } from '../../contexts/FirestoreUserContext';
+import { list } from '../../types/list';
+import { myFirestore } from '../../firebase';
+import { AddListForm } from './AddListForm';
+import { user } from '../../types/user';
+import { Card } from './Card';
+import { CardWithSettings } from './CardWithSettings';
 
 export const Lists = ({
   onManageAccess,
@@ -30,9 +30,9 @@ export const Lists = ({
     if (loading || !firestoreUser) return;
     const unsubscribeLists = onSnapshot(
       query(
-        collection(myFirestore, "lists"),
-        where("owner", "==", firestoreUser.email),
-        orderBy("createdAt", "desc")
+        collection(myFirestore, 'lists'),
+        where('owner', '==', firestoreUser.email),
+        orderBy('createdAt', 'desc')
       ),
       (querySnap) => {
         const newLists: list[] = [];
@@ -47,10 +47,10 @@ export const Lists = ({
     );
     const unsubscribeShared = onSnapshot(
       query(
-        collection(myFirestore, "lists"),
-        where("editor", "==", firestoreUser.email),
-        where("public", "==", true),
-        orderBy("createdAt", "desc")
+        collection(myFirestore, 'lists'),
+        where('editor', '==', firestoreUser.email),
+        where('public', '==', true),
+        orderBy('createdAt', 'desc')
       ),
       (querySnap) => {
         const newLists: list[] = [];
@@ -67,13 +67,13 @@ export const Lists = ({
   return (
     <>
       {loadingLists || loadingShared ? (
-        "Loading..."
+        'Loading...'
       ) : (
         <>
           <AddListForm user={firestoreUser as user} />
           {!lists.length && !shared.length ? (
             <div className="text-gray-500 italic flex-1 flex items-center px-4">
-              You haven't got any lists yet
+              You have not got any lists yet
             </div>
           ) : (
             <></>

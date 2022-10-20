@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { ErrorMsg } from "./ErrorMsg";
-import { Message } from "./Message";
-import { SignInTab } from "./SignInTab";
-import { SignUpTab } from "./SignUpTab";
+import { useState } from 'react';
+import { ErrorMsg } from './ErrorMsg';
+import { Message } from './Message';
+import { SignInTab } from './SignInTab';
+import { SignUpTab } from './SignUpTab';
 
 export const AuthForm = () => {
   const [isShowMessage, setIsShowMessage] = useState(false);
@@ -21,7 +21,7 @@ export const AuthForm = () => {
             }}
             className={`${
               !isSignIn &&
-              "shadow-[inset_-2px_-1px_4px_rgb(0,0,0,0.1)] bg-gray-50"
+              'shadow-[inset_-2px_-1px_4px_rgb(0,0,0,0.1)] bg-gray-50'
             } px-2 py-1 flex-1`}
           >
             Sign in
@@ -32,7 +32,7 @@ export const AuthForm = () => {
             }}
             className={`${
               isSignIn &&
-              "shadow-[inset_2px_-1px_4px_rgb(0,0,0,0.1)] bg-gray-50"
+              'shadow-[inset_2px_-1px_4px_rgb(0,0,0,0.1)] bg-gray-50'
             } px-2 py-1 flex-1`}
           >
             Sign up

@@ -1,17 +1,17 @@
-import { ErrorMessage, Field, Formik } from "formik";
-import { IoCopyOutline, IoTrashOutline } from "react-icons/io5";
-import { list } from "../../types/list";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { object, string } from "yup";
+import { ErrorMessage, Field, Formik } from 'formik';
+import { IoCopyOutline, IoTrashOutline } from 'react-icons/io5';
+import { list } from '../../types/list';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { object, string } from 'yup';
 import {
   deleteField,
   doc,
   FieldValue,
   serverTimestamp,
   updateDoc,
-} from "firebase/firestore";
-import { myFirestore } from "../../firebase";
-import { CustomInput } from "../../components/CustomInput";
+} from 'firebase/firestore';
+import { myFirestore } from '../../firebase';
+import { CustomInput } from '../../components/CustomInput';
 
 export const ManageAccessMenu = ({
   isManageAccess,
@@ -43,7 +43,7 @@ export const ManageAccessMenu = ({
               }
             }
             if (values.public !== list.public) newData.public = values.public;
-            updateDoc(doc(myFirestore, "lists", list.id), newData);
+            updateDoc(doc(myFirestore, 'lists', list.id), newData);
           } catch (manageAccesError) {
             console.log(manageAccesError);
           }
@@ -77,7 +77,7 @@ export const ManageAccessMenu = ({
                     type="button"
                     onClick={(e) => {
                       (e.currentTarget.lastChild as HTMLElement).textContent =
-                        "Copied!";
+                        'Copied!';
                     }}
                     className="self-start flex gap-1 items-center border-2 border-slate-500 text-slate-800 rounded px-1"
                   >
@@ -91,19 +91,19 @@ export const ManageAccessMenu = ({
               </li>
 
               <Formik
-                initialValues={{ email: "" }}
+                initialValues={{ email: '' }}
                 validationSchema={object({
                   email: string()
-                    .required("Required")
-                    .email("Must be a valid email")
+                    .required('Required')
+                    .email('Must be a valid email')
                     .test(
-                      "Owner",
-                      "Can't add your own email",
+                      'Owner',
+                      'Cannot add your own email',
                       (value) => value !== list.owner
                     ),
                 })}
                 onSubmit={(values, actions) => {
-                  outerProps.setFieldValue("admitted", values.email);
+                  outerProps.setFieldValue('admitted', values.email);
                   actions.resetForm();
                 }}
               >
@@ -124,7 +124,7 @@ export const ManageAccessMenu = ({
                       className="rounded px-2 py-0.5 bg-slate-700 text-white disabled:opacity-50"
                       type="submit"
                     >
-                      {outerProps.values.admitted ? "Change" : "Add"}
+                      {outerProps.values.admitted ? 'Change' : 'Add'}
                     </button>
                   </div>
                 )}
@@ -139,7 +139,7 @@ export const ManageAccessMenu = ({
                 <button
                   className="ml-auto text-gray-700 hover:text-black text-2xl"
                   onClick={() =>
-                    outerProps.setFieldValue("admitted", undefined)
+                    outerProps.setFieldValue('admitted', undefined)
                   }
                 >
                   <IoTrashOutline title="Delete email" />

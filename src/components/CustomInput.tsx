@@ -1,6 +1,5 @@
-import { useField } from "formik";
-import { useEffect } from "react";
-import { IoCheckmark, IoWarning } from "react-icons/io5";
+import { useField } from 'formik';
+import { IoCheckmark, IoWarning } from 'react-icons/io5';
 
 export const CustomInput = ({
   id,
@@ -23,8 +22,8 @@ export const CustomInput = ({
         type={type}
         id={id}
         className={`flex-1 box-border px-2 pr-5 py-1 border-2 rounded bg-transparent focus-visible:outline-none focus:border-blue-500 focus-visible:border-blue-500 invalid:border-red-600  ${
-          meta.error && meta.touched && "border-red-600"
-        } ${!meta.error && meta.touched && "border-green-600"} ${className}`}
+          meta.error && meta.touched && 'border-red-600'
+        } ${!meta.error && meta.touched && 'border-green-600'} ${className}`}
       />
       {meta.touched && meta.error && (
         <IoWarning
