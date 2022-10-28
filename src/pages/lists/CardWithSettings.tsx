@@ -10,20 +10,19 @@ import { Link } from 'react-router-dom';
 import { object, string } from 'yup';
 import { list } from '../../types/list';
 import { deleteListAsOwner, updateTitle } from './listsApi';
+import { ManageAccessMenu } from './ManageAccessMenu';
 export const CardWithSettings = ({
   list,
   listToEdit,
   isSettingsBlocked,
   onListToEdit,
   onIsSettingsBlocked,
-  onManageAccess,
 }: {
   list: list;
   listToEdit: string | null;
   isSettingsBlocked: boolean;
   onListToEdit: (id: string | null) => void;
   onIsSettingsBlocked: (arg: boolean) => void;
-  onManageAccess: (list: list) => void;
 }) => {
   const [isEditTitle, setEditTitle] = useState(false);
   return (
@@ -115,13 +114,7 @@ export const CardWithSettings = ({
                 <IoPencil />
                 Edit title
               </button>
-              <button
-                className="text-xs sm:text-base leading-none flex items-center gap-1 rounded bg-slate-700 px-2 text-slate-50"
-                onClick={() => onManageAccess(list)}
-              >
-                <IoPeople />
-                Manage access
-              </button>
+              <ManageAccessMenu list={list} />
               {isEditTitle && (
                 <>
                   <button

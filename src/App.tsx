@@ -5,7 +5,7 @@ import { AuthForm } from './pages/auth/AuthForm';
 import { List } from './pages/list/List';
 import { ListProvider } from './pages/list/ListContext';
 import { ListHeader } from './pages/list/ListHeader';
-import { ListsPage } from './pages/lists/ListPage';
+import { ListsPage } from './pages/lists/ListsPage';
 import { PageLayout } from './pages/lists/PageLayout';
 
 function App() {

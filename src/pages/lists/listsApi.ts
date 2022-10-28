@@ -11,7 +11,7 @@ import { nanoid } from 'nanoid';
 import { myFirestore } from './../../firebase';
 
 export const addListAsOwner = (title: string, email: string) => {
-  const listId = nanoid();
+  const listId = nanoid(10);
   return setDoc(doc(myFirestore, 'lists', listId), {
     id: listId,
     owner: email,
@@ -52,8 +52,10 @@ export const updateAccessSettings = (
     public?: boolean;
     admitted?: string | FieldValue;
     editor?: FieldValue;
-    updatedAt: FieldValue;
   }
 ) => {
-  return updateDoc(doc(myFirestore, 'lists', listId), { ...newData });
+  return updateDoc(doc(myFirestore, 'lists', listId), {
+    ...newData,
+    updatedAt: serverTimestamp(),
+  });
 };

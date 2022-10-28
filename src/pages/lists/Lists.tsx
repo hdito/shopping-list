@@ -1,21 +1,15 @@
 import { useState } from 'react';
-import { list } from '../../types/list';
 import { AddListForm } from './AddListForm';
 import { Card } from './Card';
 import { CardWithSettings } from './CardWithSettings';
 import { useLists } from './useLists';
 import { useSharedLists } from './useSharedLists';
 
-export const Lists = ({
-  onManageAccess,
-}: {
-  onManageAccess: (list: list | null) => void;
-}) => {
+export const Lists = () => {
   const [listToEdit, setListToEdit] = useState<string | null>(null);
   const [isSettingsBlocked, setIsSettingsBlocked] = useState(false);
-  const { lists, loadingLists, listsError } = useLists();
-  const { sharedLists, loadingSharedLists, sharedListsError } =
-    useSharedLists();
+  const { lists, loadingLists } = useLists();
+  const { sharedLists, loadingSharedLists } = useSharedLists();
 
   return (
     <>
@@ -40,7 +34,6 @@ export const Lists = ({
                   isSettingsBlocked={isSettingsBlocked}
                   onListToEdit={setListToEdit}
                   onIsSettingsBlocked={setIsSettingsBlocked}
-                  onManageAccess={onManageAccess}
                   list={list}
                   listToEdit={listToEdit}
                 />
