@@ -1,17 +1,11 @@
+import { deleteField, FieldValue, serverTimestamp } from 'firebase/firestore';
 import { ErrorMessage, Field, Formik } from 'formik';
-import { IoCopyOutline, IoTrashOutline } from 'react-icons/io5';
-import { list } from '../../types/list';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { IoCopyOutline, IoTrashOutline } from 'react-icons/io5';
 import { object, string } from 'yup';
-import {
-  deleteField,
-  doc,
-  FieldValue,
-  serverTimestamp,
-  updateDoc,
-} from 'firebase/firestore';
-import { myFirestore } from '../../firebase';
 import { CustomInput } from '../../components/CustomInput';
+import { list } from '../../types/list';
+import { updateAccessSettings } from './listsApi';
 
 export const ManageAccessMenu = ({
   isManageAccess,
@@ -29,23 +23,27 @@ export const ManageAccessMenu = ({
           values.admitted !== list.admitted ||
           values.public !== list.public
         ) {
-          try {
-            const newData: {
-              public?: boolean;
-              admitted?: string | FieldValue;
-              updatedAt: FieldValue;
-            } = { updatedAt: serverTimestamp() };
-            if (!(values.admitted === list.admitted)) {
-              if (!values.admitted) {
+          const newData: {
+            public?: boolean;
+            admitted?: string | FieldValue;
+            editor?: FieldValue;
+            updatedAt: FieldValue;
+          } = { updatedAt: serverTimestamp() };
+          if (!(values.admitted === list.admitted)) {
+            if (!values.admitted) {
+              {
                 newData.admitted = deleteField();
-              } else {
-                newData.admitted = values.admitted;
+                if (list.editor) newData.editor = deleteField();
               }
+            } else {
+              newData.admitted = values.admitted;
             }
-            if (values.public !== list.public) newData.public = values.public;
-            updateDoc(doc(myFirestore, 'lists', list.id), newData);
+          }
+          if (values.public !== list.public) newData.public = values.public;
+          try {
+            await updateAccessSettings(list.id, newData);
           } catch (manageAccesError) {
-            console.log(manageAccesError);
+            alert(manageAccesError);
           }
         }
         onClose();

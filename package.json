@@ -25,6 +25,7 @@
     "eslint-plugin-react": "^7.31.10",
     "firebase": "^9.9.1",
     "formik": "^2.2.9",
+    "nanoid": "^4.0.0",
     "prettier": "^2.7.1",
     "prop-types": "^15.8.1",
     "react-copy-to-clipboard": "^5.1.0",

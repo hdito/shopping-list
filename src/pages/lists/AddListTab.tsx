@@ -1,4 +1,4 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { ErrorMessage, Form, Formik } from 'formik';
 import { object, string } from 'yup';
 import { CustomInput } from '../../components/CustomInput';
 
@@ -25,7 +25,7 @@ export const AddListTab = ({
         actions.resetForm();
       }}
     >
-      {(props) => (
+      {() => (
         <Form className="flex flex-col gap-2 p-2">
           <div className="w-full flex flex-col gap-2">
             <label

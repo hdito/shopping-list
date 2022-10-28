@@ -9,8 +9,8 @@ import { ErrorMessage, Field, Formik } from 'formik';
 import { useState } from 'react';
 import { IoPencil, IoSettingsOutline, IoTrashOutline } from 'react-icons/io5';
 import { object, string } from 'yup';
-import { myFirestore } from '../../../firebase';
-import { item } from '../../../types/item';
+import { myFirestore } from '../../firebase';
+import { item } from '../../types/item';
 
 export const ItemCard = ({
   listID,

@@ -1,16 +1,15 @@
-import { deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { ErrorMessage, Field, Formik } from 'formik';
+import { useState } from 'react';
 import {
   IoPencil,
   IoPeople,
   IoSettingsOutline,
   IoTrashOutline,
 } from 'react-icons/io5';
-import { list } from '../../types/list';
-import { myFirestore } from '../../firebase';
-import { useState } from 'react';
-import { ErrorMessage, Field, Formik } from 'formik';
-import { object, string } from 'yup';
 import { Link } from 'react-router-dom';
+import { object, string } from 'yup';
+import { list } from '../../types/list';
+import { deleteListAsOwner, updateTitle } from './listsApi';
 export const CardWithSettings = ({
   list,
   listToEdit,
@@ -35,21 +34,20 @@ export const CardWithSettings = ({
       validationSchema={object({ title: string().required('Required') })}
       onSubmit={async (values, actions) => {
         if (values.title !== list.title) {
-          updateDoc(doc(myFirestore, 'lists', list.id), {
-            title: values.title,
-            updatedAt: serverTimestamp(),
-          });
+          try {
+            await updateTitle(list.id, values.title);
+          } catch (error) {
+            alert(error);
+          }
         }
         setEditTitle(false);
         actions.resetForm();
         onIsSettingsBlocked(false);
       }}
     >
-      {(props) => (
+      {({ resetForm, submitForm }) => (
         <div className="rounded overflow-hidden shadow-sm border-2 border-slate-300 hover:shadow-md">
-          <div
-            className={`h-10 flex items-center gap-1 p-1 pl-2 transition-all duration-100`}
-          >
+          <div className="h-10 flex items-center gap-1 p-1 pl-2 transition-all duration-100">
             {isEditTitle ? (
               <>
                 <Field
@@ -93,7 +91,13 @@ export const CardWithSettings = ({
               <IoSettingsOutline title="Settings" />
             </button>
             <button
-              onClick={() => deleteDoc(doc(myFirestore, 'lists', list.id))}
+              onClick={async () => {
+                try {
+                  await deleteListAsOwner(list.id);
+                } catch (error) {
+                  alert(error);
+                }
+              }}
               className="text-gray-700 hover:text-black text-2xl"
             >
               <IoTrashOutline title="Delete" />
@@ -121,7 +125,7 @@ export const CardWithSettings = ({
               {isEditTitle && (
                 <>
                   <button
-                    onClick={props.submitForm}
+                    onClick={submitForm}
                     className="text-sm sm:text-base ml-auto px-2 py-0.5 rounded bg-blue-500 text-white"
                   >
                     Save
@@ -131,7 +135,7 @@ export const CardWithSettings = ({
                     onClick={() => {
                       setEditTitle(false);
                       onIsSettingsBlocked(false);
-                      props.resetForm();
+                      resetForm();
                     }}
                   >
                     Cancel

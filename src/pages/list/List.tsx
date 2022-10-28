@@ -1,41 +1,28 @@
-import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { myFirestore } from '../../../firebase';
-import { item } from '../../../types/item';
-import { sortByIsFinished } from '../../../utils/sortByIsFinished';
-import { sortByIsUrgent } from '../../../utils/sortByIsUrgent';
+import { item } from '../../types/item';
+import { sortByIsFinished } from '../../utils/sortByIsFinished';
+import { sortByIsUrgent } from '../../utils/sortByIsUrgent';
 import { AddItemForm } from './AddItemForm';
 import { ItemCard } from './ItemCard';
+import { useListContext } from './ListContext';
 
 export const List = () => {
-  const [items, setItems] = useState<item[]>([]);
-  const [loadingItems, setLoadingItems] = useState(true);
   const [itemToEdit, setItemToEdit] = useState<string | null>(null);
   const [isSettingsBlocked, setIsSettingsBlocked] = useState(false);
   const params = useParams();
   const id = params.id as string;
+  const { list, loadingList } = useListContext();
 
-  useEffect(() => {
-    const unsubscribeItems = onSnapshot(
-      query(
-        collection(myFirestore, 'lists', id, 'items'),
-        orderBy('createdAt', 'desc')
-      ),
-      (querySnap) => {
-        const newItems: item[] = [];
-        querySnap.forEach((docSnap) => {
-          if (docSnap.exists()) newItems.push(docSnap.data() as item);
-        });
-        setItems(newItems);
-        setLoadingItems(false);
-      }
-    );
-    return unsubscribeItems;
-  }, []);
+  let items: item[] = [];
+  if (list?.items)
+    items = Object.keys(list.items).map((key) => {
+      return list.items[key];
+    });
+
   return (
     <>
-      {!loadingItems ? (
+      {!loadingList ? (
         <>
           <AddItemForm listID={id} />
           <div className="flex flex-col gap-1 w-full h-full px-2">

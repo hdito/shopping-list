@@ -1,10 +1,11 @@
-import { doc, onSnapshot, serverTimestamp, setDoc } from 'firebase/firestore';
 import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+  doc,
+  FirestoreError,
+  onSnapshot,
+  serverTimestamp,
+  setDoc,
+} from 'firebase/firestore';
+import { createContext, useContext, useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { myFirestore } from '../firebase';
 import { user } from '../types/user';
@@ -12,14 +13,23 @@ import { useAuth } from './AuthContext';
 
 const FirestoreUserContext = createContext<{
   firestoreUser: user | null;
-  loading: boolean;
-}>({ firestoreUser: null, loading: true });
+  loadingFirestoreUser: boolean;
+  firestoreUserError: FirestoreError | null;
+}>({
+  firestoreUser: null,
+  loadingFirestoreUser: true,
+  firestoreUserError: null,
+});
+
 export const useFirestoreUserContext = () => {
   return useContext(FirestoreUserContext);
 };
+
 export const FirestoreUserProvider = () => {
   const [firestoreUser, setFirestoreUser] = useState<user | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [firestoreUserError, setFirestoreUserError] =
+    useState<FirestoreError | null>(null);
+  const [loadingFirestoreUser, setLoadingUser] = useState(true);
   const currentUser = useAuth();
 
   useEffect(() => {
@@ -29,7 +39,7 @@ export const FirestoreUserProvider = () => {
       (docSnap) => {
         if (docSnap.exists()) {
           setFirestoreUser(docSnap.data() as user);
-          setLoading(false);
+          setLoadingUser(false);
         } else {
           setDoc(doc(myFirestore, 'users', currentUser.uid), {
             uid: currentUser.uid,
@@ -39,12 +49,16 @@ export const FirestoreUserProvider = () => {
           });
         }
       },
-      (userError) => alert(userError.message)
+      (error) => setFirestoreUserError(error)
     );
+
     return unsubscribeFirestoreUser;
   }, [currentUser]);
+
   return (
-    <FirestoreUserContext.Provider value={{ firestoreUser, loading }}>
+    <FirestoreUserContext.Provider
+      value={{ firestoreUser, loadingFirestoreUser, firestoreUserError }}
+    >
       <Outlet />
     </FirestoreUserContext.Provider>
   );

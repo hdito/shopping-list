@@ -1,9 +1,7 @@
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { ErrorMessage, Form, Formik } from 'formik';
-import short from 'short-uuid';
 import { object, string } from 'yup';
-import { CustomInput } from '../../../components/CustomInput';
-import { myFirestore } from '../../../firebase';
+import { CustomInput } from '../../components/CustomInput';
+import { addItem } from './listApi';
 
 export const AddItemForm = ({ listID }: { listID: string }) => {
   return (
@@ -11,14 +9,7 @@ export const AddItemForm = ({ listID }: { listID: string }) => {
       initialValues={{ title: '' }}
       validationSchema={object({ title: string().required('Required') })}
       onSubmit={async ({ title }, actions) => {
-        const itemID = short.generate();
-        await setDoc(doc(myFirestore, 'lists', listID, 'items', itemID), {
-          id: itemID,
-          title,
-          isFinished: false,
-          isUrgent: false,
-          createdAt: serverTimestamp(),
-        });
+        await addItem(listID, title);
         actions.resetForm();
       }}
     >

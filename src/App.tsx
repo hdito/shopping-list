@@ -1,47 +1,37 @@
-import { useState } from 'react';
-import { AuthForm } from './pages/auth/AuthForm';
-import { list } from './types/list';
 import { Navigate, Route, Routes } from 'react-router-dom';
-import { Lists } from './pages/lists/Lists';
-import { Header } from './pages/lists/Header';
 import { useAuth } from './contexts/AuthContext';
 import { FirestoreUserProvider } from './contexts/FirestoreUserContext';
-import { List } from './pages/lists/list/List';
+import { AuthForm } from './pages/auth/AuthForm';
+import { List } from './pages/list/List';
+import { ListProvider } from './pages/list/ListContext';
+import { ListHeader } from './pages/list/ListHeader';
+import { ListsPage } from './pages/lists/ListPage';
 import { PageLayout } from './pages/lists/PageLayout';
 
 function App() {
-  const [isManageAccess, setIsManageAccess] = useState<list | null>(null);
   const currentUser = useAuth();
+  const isUserVerified = currentUser?.emailVerified ? true : false;
+
   return (
     <div className="h-full flex flex-col items-center gap-2 min-w-[300px]">
       <Routes>
         <Route
           path="/"
           element={
-            !currentUser || !currentUser.emailVerified ? (
-              <Navigate to="/auth" />
-            ) : (
-              <Navigate to="/lists" />
-            )
+            !isUserVerified ? <Navigate to="/auth" /> : <Navigate to="/lists" />
           }
         />
         <Route
           path="/auth"
           element={
-            <>
-              {!(currentUser && currentUser.emailVerified) ? (
-                <AuthForm />
-              ) : (
-                <Navigate to="/lists" />
-              )}
-            </>
+            <>{!isUserVerified ? <AuthForm /> : <Navigate to="/lists" />}</>
           }
         />
         <Route
           path="/lists"
           element={
             <>
-              {currentUser && currentUser.emailVerified ? (
+              {isUserVerified ? (
                 <FirestoreUserProvider />
               ) : (
                 <Navigate to="/auth" />
@@ -49,22 +39,18 @@ function App() {
             </>
           }
         >
-          <Route element={<Header isManageAccess={isManageAccess} />}>
-            <Route
-              element={
-                <PageLayout
-                  onManageAccess={setIsManageAccess}
-                  isManageAccess={isManageAccess}
-                />
-              }
-            >
-              <Route
-                index
-                element={<Lists onManageAccess={setIsManageAccess} />}
-              />
-              <Route path=":id" element={<List />} />
-            </Route>
-          </Route>
+          <Route index element={<ListsPage />} />
+          <Route
+            path=":listId"
+            element={
+              <ListProvider>
+                <ListHeader />
+                <PageLayout>
+                  <List />
+                </PageLayout>
+              </ListProvider>
+            }
+          />
         </Route>
       </Routes>
     </div>

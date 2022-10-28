@@ -12,6 +12,7 @@ specifiers:
   eslint-plugin-react: ^7.31.10
   firebase: ^9.9.1
   formik: ^2.2.9
+  nanoid: ^4.0.0
   postcss: ^8.4.14
   prettier: ^2.7.1
   prop-types: ^15.8.1
@@ -43,6 +44,7 @@ devDependencies:
   eslint-plugin-react: 7.31.10_eslint@8.25.0
   firebase: 9.9.1
   formik: 2.2.9_react@18.2.0
+  nanoid: 4.0.0
   prettier: 2.7.1
   prop-types: 15.8.1
   react-copy-to-clipboard: 5.1.0_react@18.2.0
@@ -2541,6 +2543,12 @@ packages:
     resolution: {integrity: sha512-MqBkQh/OHTS2egovRtLk45wEyNXwF+cokD+1YPf9u5VfJiRdAiRwB2froX5Co9Rh20xs4siNPm8naNotSD6RBw==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
     hasBin: true
+
+  /nanoid/4.0.0:
+    resolution: {integrity: sha512-IgBP8piMxe/gf73RTQx7hmnhwz0aaEXYakvqZyE302IXW3HyVNhdNGC+O2MwMAVhLEnvXlvKtGbtJf6wvHihCg==}
+    engines: {node: ^14 || ^16 || >=18}
+    hasBin: true
+    dev: true
 
   /natural-compare/1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}

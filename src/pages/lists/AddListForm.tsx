@@ -1,13 +1,14 @@
-import { doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { useState } from 'react';
-import { myFirestore } from '../../firebase';
-import { AddListTab } from './AddListTab';
-import short from 'short-uuid';
+import { useFirestoreUserContext } from '../../contexts/FirestoreUserContext';
 import { user } from '../../types/user';
+import { AddListTab } from './AddListTab';
+import { addListAsEditor, addListAsOwner } from './listsApi';
 
-export const AddListForm = ({ user }: { user: user }) => {
+export const AddListForm = () => {
   const [isOpenAddForm, setIsOpenAddForm] = useState(false);
   const [isCreateNew, setIsCreateNew] = useState(true);
+  const firestoreUserContext = useFirestoreUserContext();
+  const firestoreUser = firestoreUserContext.firestoreUser as user;
 
   return (
     <div className={`${isOpenAddForm ? 'px-0 xs:px-4' : 'px-4'} w-full`}>
@@ -53,18 +54,11 @@ export const AddListForm = ({ user }: { user: user }) => {
                 label="Title"
                 onCancel={() => setIsOpenAddForm(false)}
                 onSave={async (title) => {
-                  const id = short.generate().toString();
                   try {
-                    await setDoc(doc(myFirestore, 'lists', id), {
-                      title,
-                      id,
-                      owner: user.email,
-                      public: false,
-                      createdAt: serverTimestamp(),
-                    });
+                    await addListAsOwner(title, firestoreUser.email);
                     setIsOpenAddForm(false);
                   } catch (addListError) {
-                    console.log(addListError);
+                    alert(addListError);
                   }
                 }}
               />
@@ -75,13 +69,10 @@ export const AddListForm = ({ user }: { user: user }) => {
                 onCancel={() => setIsOpenAddForm(false)}
                 onSave={async (id) => {
                   try {
-                    updateDoc(doc(myFirestore, 'lists', id), {
-                      editor: user.email,
-                      updatedAt: serverTimestamp(),
-                    }).then((doc) => console.log(doc));
                     setIsOpenAddForm(false);
+                    await addListAsEditor(id, firestoreUser.email);
                   } catch (error) {
-                    console.log(error);
+                    alert(error);
                   }
                 }}
               />
