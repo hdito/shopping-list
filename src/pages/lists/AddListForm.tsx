@@ -16,7 +16,7 @@ export const AddListForm = () => {
         className={`${
           isOpenAddForm &&
           ' border-y-2 xs:border-2 border-slate-300 shadow-md xs:rounded-md overflow-hidden'
-        } m-auto flex flex-col gap-1 w-fit`}
+        } m-auto flex flex-col gap-1 xs:w-fit`}
       >
         {isOpenAddForm ? (
           <>
@@ -29,7 +29,7 @@ export const AddListForm = () => {
                   !isCreateNew
                     ? 'shadow-[inset_-2px_-1px_4px_rgb(0,0,0,0.1)] bg-slate-50'
                     : 'bg-transparent'
-                } px-4 py-1 whitespace-nowrap`}
+                } px-4 py-1 whitespace-nowrap flex-1`}
                 type="button"
               >
                 Create new
@@ -42,7 +42,7 @@ export const AddListForm = () => {
                   isCreateNew
                     ? 'shadow-[inset_2px_-1px_4px_rgb(0,0,0,0.1)] bg-slate-50'
                     : 'bg-transparent'
-                } px-4 py-1 whitespace-nowrap text-start`}
+                } px-4 py-1 whitespace-nowrap flex-1`}
                 type="button"
               >
                 Add existing list

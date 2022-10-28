@@ -16,7 +16,7 @@ export const Button = ({
       onClick={onClick}
       type={type}
       className={
-        'px-2 py-1 bg-black text-white rounded hover:bg-gray-700 transition-all duration-100 ' +
+        'px-2 py-1 bg-black text-white rounded hover:bg-gray-700 hover:shadow-md transition-all duration-100 ' +
         className
       }
     >
