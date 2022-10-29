@@ -16,12 +16,14 @@ export const toggleFinishItem = (
   return updateDoc(doc(myFirestore, 'lists', listId), {
     [`items.${itemId}.isFinished`]: isFinished,
     [`items.${itemId}.updatedAt`]: serverTimestamp(),
+    updatedAt: serverTimestamp(),
   });
 };
 
 export const deleteItem = (listId: string, itemId: string) => {
   return updateDoc(doc(myFirestore, 'lists', listId), {
     [`items.${itemId}`]: deleteField(),
+    updatedAt: serverTimestamp(),
   });
 };
 
@@ -39,21 +41,14 @@ export const updateItem = (
   };
   if (newData.title) data[`items.${itemId}.title`] = newData.title;
   if (newData.isUrgent) data[`items.${itemId}.isUrgent`] = newData.isUrgent;
-  return updateDoc(doc(myFirestore, 'lists', listId), { ...data });
+  return updateDoc(doc(myFirestore, 'lists', listId), {
+    ...data,
+    updatedAt: serverTimestamp(),
+  });
 };
 
 export const addItem = (listId: string, title: string) => {
   const itemId = nanoid();
-
-  console.log({
-    [`items.${itemId}`]: {
-      id: itemId,
-      title,
-      isFinished: false,
-      isUrgent: false,
-      createdAt: serverTimestamp(),
-    },
-  });
 
   return updateDoc(doc(myFirestore, 'lists', listId), {
     [`items.${itemId}`]: {
@@ -63,5 +58,6 @@ export const addItem = (listId: string, title: string) => {
       isUrgent: false,
       createdAt: serverTimestamp(),
     },
+    updatedAt: serverTimestamp(),
   });
 };

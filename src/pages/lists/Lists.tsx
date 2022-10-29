@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { sortByTime } from '../../utils/sortByTime';
 import { AddListForm } from './AddListForm';
 import { Card } from './Card';
 import { CardWithSettings } from './CardWithSettings';
@@ -28,24 +29,30 @@ export const Lists = () => {
           {lists.length !== 0 && (
             <div className="w-full pl-2 pr-4 border-l-8 border-black flex flex-col gap-1">
               <h2 className="font-bold">My lists</h2>
-              {lists.map((list) => (
-                <CardWithSettings
-                  key={list.id}
-                  isSettingsBlocked={isSettingsBlocked}
-                  onListToEdit={setListToEdit}
-                  onIsSettingsBlocked={setIsSettingsBlocked}
-                  list={list}
-                  listToEdit={listToEdit}
-                />
-              ))}
+              {lists
+                .sort(sortByTime)
+                .reverse()
+                .map((list) => (
+                  <CardWithSettings
+                    key={list.id}
+                    isSettingsBlocked={isSettingsBlocked}
+                    onListToEdit={setListToEdit}
+                    onIsSettingsBlocked={setIsSettingsBlocked}
+                    list={list}
+                    listToEdit={listToEdit}
+                  />
+                ))}
             </div>
           )}
           {sharedLists.length !== 0 && (
             <div className="w-full pl-2 pr-4 border-l-8 border-black flex flex-col gap-1">
               <h2 className="font-bold">Shared</h2>
-              {sharedLists.map((list) => (
-                <Card key={list.id} list={list} />
-              ))}
+              {sharedLists
+                .sort(sortByTime)
+                .reverse()
+                .map((list) => (
+                  <Card key={list.id} list={list} />
+                ))}
             </div>
           )}
         </>

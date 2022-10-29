@@ -3,6 +3,7 @@ import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { item } from '../../types/item';
 import { sortByIsFinished } from '../../utils/sortByIsFinished';
 import { sortByIsUrgent } from '../../utils/sortByIsUrgent';
+import { sortByTime } from '../../utils/sortByTime';
 import { AddItemForm } from './AddItemForm';
 import { ItemCard } from './ItemCard';
 import { useListContext } from './ListContext';
@@ -29,6 +30,8 @@ export const List = () => {
             {items.length !== 0 ? (
               <>
                 {items
+                  .sort(sortByTime)
+                  .reverse()
                   .sort(sortByIsUrgent)
                   .sort(sortByIsFinished)
                   .map((item) => (
