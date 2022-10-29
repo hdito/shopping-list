@@ -1,7 +1,9 @@
+import { FirestoreError } from 'firebase/firestore';
 import { useState } from 'react';
 import { useFirestoreUserContext } from '../../contexts/FirestoreUserContext';
 import { user } from '../../types/user';
 import { AddListTab } from './AddListTab';
+import { FormErrorMessage } from './FormErrorMessage';
 import { addListAsEditor, addListAsOwner } from './listsApi';
 
 export const AddListForm = () => {
@@ -9,6 +11,8 @@ export const AddListForm = () => {
   const [isCreateNew, setIsCreateNew] = useState(true);
   const firestoreUserContext = useFirestoreUserContext();
   const firestoreUser = firestoreUserContext.firestoreUser as user;
+
+  const [formError, setFormError] = useState<FirestoreError | null>(null);
 
   return (
     <div className={`${isOpenAddForm ? 'px-0 xs:px-4' : 'px-4'} w-full`}>
@@ -48,6 +52,14 @@ export const AddListForm = () => {
                 Add existing list
               </button>
             </div>
+            {formError && (
+              <div className="mx-2">
+                <FormErrorMessage
+                  error={formError}
+                  onHide={() => setFormError(null)}
+                />
+              </div>
+            )}
             {isCreateNew ? (
               <AddListTab
                 value="title"
@@ -56,9 +68,8 @@ export const AddListForm = () => {
                 onSave={async (title) => {
                   try {
                     await addListAsOwner(title, firestoreUser.email);
-                    setIsOpenAddForm(false);
-                  } catch (addListError) {
-                    alert(addListError);
+                  } catch (error) {
+                    setFormError(error as FirestoreError);
                   }
                 }}
               />
@@ -69,10 +80,9 @@ export const AddListForm = () => {
                 onCancel={() => setIsOpenAddForm(false)}
                 onSave={async (id) => {
                   try {
-                    setIsOpenAddForm(false);
                     await addListAsEditor(id, firestoreUser.email);
                   } catch (error) {
-                    alert(error);
+                    setFormError(error as FirestoreError);
                   }
                 }}
               />
