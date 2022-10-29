@@ -147,16 +147,18 @@ export const ItemCard = ({
               </button>
 
               <div className="flex gap-1 h-full items-center">
-                <button
-                  className="text-sm sm:text-base px-2 h-full rounded bg-blue-500 text-white disabled:opacity-50"
+                <Button
+                  className="text-sm sm:text-base h-full"
+                  role="action"
                   onClick={() => {
                     submitForm();
                   }}
                 >
                   Save
-                </button>
-                <button
-                  className="text-sm sm:text-base px-2 h-full rounded border-slate-500 border-2 bg-slate-50 disabled:opacity-50"
+                </Button>
+                <Button
+                  className="text-sm sm:text-base h-full"
+                  role="cancel"
                   onClick={() => {
                     setIsEditTitle(false);
                     resetForm();
@@ -164,7 +166,7 @@ export const ItemCard = ({
                   }}
                 >
                   Cancel
-                </button>
+                </Button>
               </div>
             </div>
           )}

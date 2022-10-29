@@ -1,13 +1,9 @@
 import { ErrorMessage, Field, Formik } from 'formik';
 import { useState } from 'react';
-import {
-  IoPencil,
-  IoPeople,
-  IoSettingsOutline,
-  IoTrashOutline,
-} from 'react-icons/io5';
+import { IoPencil, IoSettingsOutline, IoTrashOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import { object, string } from 'yup';
+import { Button } from '../../components/Button';
 import { list } from '../../types/list';
 import { deleteListAsOwner, updateTitle } from './listsApi';
 import { ManageAccessMenu } from './ManageAccessMenu';
@@ -117,14 +113,16 @@ export const CardWithSettings = ({
               <ManageAccessMenu list={list} />
               {isEditTitle && (
                 <>
-                  <button
+                  <Button
                     onClick={submitForm}
-                    className="text-sm sm:text-base ml-auto px-2 py-0.5 rounded bg-blue-500 text-white"
+                    className="text-sm sm:text-base ml-auto"
+                    role="action"
                   >
                     Save
-                  </button>
-                  <button
-                    className="text-sm sm:text-base px-2 py-0.5 rounded border-slate-500 border-2 bg-slate-50"
+                  </Button>
+                  <Button
+                    className="text-sm sm:text-base"
+                    role="cancel"
                     onClick={() => {
                       setEditTitle(false);
                       onIsSettingsBlocked(false);
@@ -132,7 +130,7 @@ export const CardWithSettings = ({
                     }}
                   >
                     Cancel
-                  </button>
+                  </Button>
                 </>
               )}
             </div>

@@ -1,5 +1,6 @@
 import { ErrorMessage, Form, Formik } from 'formik';
 import { object, string } from 'yup';
+import { Button } from '../../components/Button';
 import { CustomInput } from '../../components/CustomInput';
 
 export const AddListTab = ({
@@ -40,19 +41,17 @@ export const AddListTab = ({
             </label>
           </div>
           <div className="w-full flex gap-2">
-            <button
-              className="flex-1 px-2 py-0.5 rounded bg-blue-500 text-white disabled:opacity-50 hover:shadow-sm"
-              type="submit"
-            >
+            <Button className="flex-1" type="submit" role="action">
               Add
-            </button>
-            <button
-              className="flex-1 px-2 py-0.5 rounded border-slate-300 border-2 bg-slate-50 disabled:opacity-50 hover:shadow-sm"
+            </Button>
+            <Button
+              className="flex-1"
               onClick={() => onCancel()}
               type="button"
+              role="cancel"
             >
               Cancel
-            </button>
+            </Button>
           </div>
         </Form>
       )}

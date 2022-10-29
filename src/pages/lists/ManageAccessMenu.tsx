@@ -7,6 +7,7 @@ import { CustomInput } from '../../components/CustomInput';
 import { list } from '../../types/list';
 import { CopyButton } from '../../components/CopyButton';
 import { updateAccessSettings } from './listsApi';
+import { Button } from '../../components/Button';
 
 export const ManageAccessMenu = ({ list }: { list: list }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -148,18 +149,20 @@ export const ManageAccessMenu = ({ list }: { list: list }) => {
                     </div>
                   )}
                   <div className="flex gap-1 col-span-2">
-                    <button
-                      className="flex-1 px-2 py-0.5 rounded bg-blue-500 hover:shadow-sm shadow-blue-500 text-white disabled:opacity-50"
+                    <Button
+                      className="flex-1"
                       onClick={outerProps.submitForm}
+                      role="action"
                     >
                       Save
-                    </button>
-                    <button
-                      className="flex-1 px-2 py-0.5 rounded border-slate-500 text-slate-800 border-2 bg-slate-50 hover:shadow-sm shadow-slate-300"
+                    </Button>
+                    <Button
+                      className="flex-1"
+                      role="cancel"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Cancel
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
