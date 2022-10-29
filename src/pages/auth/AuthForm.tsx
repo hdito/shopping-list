@@ -10,9 +10,7 @@ export const AuthForm = () => {
   const [error, setError] = useState<null | Error>(null);
   return (
     <div className="py-2 w-full">
-      <h1 className="font-bold text-center mb-2">
-        To continue please authentificate
-      </h1>
+      <h1 className="font-bold text-center mb-2">Authenticate to continue</h1>
       <div className="sm:shadow-sm sm:rounded border-y-2 sm:border-2 sm:max-w-[40ch] w-full m-auto">
         <div className="flex">
           <button

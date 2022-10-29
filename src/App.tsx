@@ -13,7 +13,7 @@ function App() {
   const isUserVerified = currentUser?.emailVerified ? true : false;
 
   return (
-    <div className="h-full flex flex-col items-center gap-2 min-w-[300px]">
+    <div className="min-h-screen flex flex-col items-center gap-2 min-w-[300px] pb-4">
       <Routes>
         <Route
           path="/"
