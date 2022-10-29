@@ -14,12 +14,12 @@ import { list } from '../../types/list';
 export const useSharedLists = () => {
   const [sharedLists, setSharedlists] = useState<list[]>([]);
   const [loadingSharedLists, setLoadingSharedLists] = useState(true);
-  const { firestoreUser, loadingUser } = useFirestoreUserContext();
+  const { firestoreUser, loadingFirestoreUser } = useFirestoreUserContext();
   const [sharedListsError, setSharedListsError] =
     useState<FirestoreError | null>(null);
 
   useEffect(() => {
-    if (loadingUser || firestoreUser === null) return;
+    if (loadingFirestoreUser || firestoreUser === null) return;
 
     const unsubscribeShared = onSnapshot(
       query(
@@ -38,7 +38,7 @@ export const useSharedLists = () => {
     );
 
     return unsubscribeShared;
-  }, [loadingUser, firestoreUser]);
+  }, [loadingFirestoreUser, firestoreUser]);
 
   return { sharedLists, loadingSharedLists, sharedListsError };
 };
