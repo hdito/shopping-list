@@ -1,26 +1,21 @@
-import {
-  deleteDoc,
-  doc,
-  FieldValue,
-  serverTimestamp,
-  updateDoc,
-} from 'firebase/firestore';
+import { FieldValue, serverTimestamp } from 'firebase/firestore';
 import { ErrorMessage, Field, Formik } from 'formik';
 import { useState } from 'react';
 import { IoPencil, IoSettingsOutline, IoTrashOutline } from 'react-icons/io5';
 import { object, string } from 'yup';
-import { myFirestore } from '../../firebase';
+import { Button } from '../../components/Button';
 import { item } from '../../types/item';
+import { deleteItem, toggleFinishItem, updateItem } from './listApi';
 
 export const ItemCard = ({
-  listID,
+  listId,
   item,
   itemToEdit,
   isSettingsBlocked,
   onIsSettingsBlocked,
   onItemToEdit,
 }: {
-  listID: string;
+  listId: string;
   itemToEdit: string | null;
   isSettingsBlocked: boolean;
   item: item;
@@ -42,9 +37,7 @@ export const ItemCard = ({
           if (values.title !== item.title) newData.title = values.title;
           if (values.isUrgent !== item.isUrgent)
             newData.isUrgent = values.isUrgent;
-          await updateDoc(doc(myFirestore, 'lists', listID, 'items', item.id), {
-            ...newData,
-          });
+          await updateItem(listId, item.id, newData);
         }
         actions.resetForm({ values: { ...values } });
         setIsEditTitle(false);
@@ -75,13 +68,11 @@ export const ItemCard = ({
                     checked={item.isFinished}
                     type="checkbox"
                     id={`${item.id}-is-finished`}
-                    onChange={(e) =>
-                      updateDoc(
-                        doc(myFirestore, 'lists', listID, 'items', item.id),
-                        {
-                          isFinished: e.currentTarget.checked,
-                          updatedAt: serverTimestamp(),
-                        }
+                    onChange={async (e) =>
+                      await toggleFinishItem(
+                        e.currentTarget.checked,
+                        listId,
+                        item.id
                       )
                     }
                     className="flex-shrink-0 relative peer box-border rounded appearance-none w-5 h-5 border-2 border-slate-300 checked:before:content-['✓'] before:text-white before:absolute before:top-1/2 before:left-1/2 before:-translate-x-1/2 before:-translate-y-1/2 checked:bg-slate-700 checked:border-none"
@@ -120,9 +111,7 @@ export const ItemCard = ({
                 <IoSettingsOutline title="Settings" />
               </button>
               <button
-                onClick={() =>
-                  deleteDoc(doc(myFirestore, 'lists', listID, 'items', item.id))
-                }
+                onClick={async () => await deleteItem(listId, item.id)}
                 className="text-gray-700 hover:text-black text-2xl"
               >
                 <IoTrashOutline title="Delete" />

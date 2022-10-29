@@ -14,7 +14,7 @@ export const toggleFinishItem = (
   itemId: string
 ) => {
   return updateDoc(doc(myFirestore, 'lists', listId), {
-    [`items.${itemId}.isFinished`]: { isFinished },
+    [`items.${itemId}.isFinished`]: isFinished,
     [`items.${itemId}.updatedAt`]: serverTimestamp(),
   });
 };
@@ -44,6 +44,17 @@ export const updateItem = (
 
 export const addItem = (listId: string, title: string) => {
   const itemId = nanoid();
+
+  console.log({
+    [`items.${itemId}`]: {
+      id: itemId,
+      title,
+      isFinished: false,
+      isUrgent: false,
+      createdAt: serverTimestamp(),
+    },
+  });
+
   return updateDoc(doc(myFirestore, 'lists', listId), {
     [`items.${itemId}`]: {
       id: itemId,
