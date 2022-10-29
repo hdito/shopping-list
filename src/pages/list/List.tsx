@@ -26,7 +26,7 @@ export const List = () => {
       ) : (
         <>
           <AddItemForm listID={list.id} />
-          <div className="flex flex-col gap-1 w-full h-full px-2">
+          <div className="flex flex-1 flex-col gap-1 w-full h-full px-2">
             {items.length !== 0 ? (
               <>
                 {items
