@@ -1,4 +1,6 @@
+import { FirestoreError } from 'firebase/firestore';
 import { useState } from 'react';
+import { ErrorMessage } from '../../components/ErrorMessage';
 import { LoadingSpinner } from '../../components/LoadingSpinner';
 import { item } from '../../types/item';
 import { sortByIsFinished } from '../../utils/sortByIsFinished';
@@ -12,6 +14,7 @@ export const List = () => {
   const [itemToEdit, setItemToEdit] = useState<string | null>(null);
   const [isSettingsBlocked, setIsSettingsBlocked] = useState(false);
   const { list, loadingList } = useListContext();
+  const [listError, setListError] = useState<FirestoreError | null>(null);
 
   let items: item[] = [];
   if (list?.items)
@@ -43,6 +46,7 @@ export const List = () => {
                       key={item.id}
                       item={item}
                       listId={list.id}
+                      onError={setListError}
                     />
                   ))}
               </>
@@ -51,6 +55,14 @@ export const List = () => {
                 <div className="text-gray-500 italic">
                   There are no items in this list yet
                 </div>
+              </div>
+            )}
+            {listError && (
+              <div className="fixed right-4 bottom-4">
+                <ErrorMessage
+                  error={listError}
+                  onHide={() => setListError(null)}
+                />
               </div>
             )}
           </div>
