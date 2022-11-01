@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useFirestoreUserContext } from '../../contexts/FirestoreUserContext';
 import { user } from '../../types/user';
 import { AddListTab } from './AddListTab';
-import { FormErrorMessage } from './FormErrorMessage';
+import { ErrorMessage } from '../../components/ErrorMessage';
 import { addListAsEditor, addListAsOwner } from './listsApi';
 
 export const AddListForm = () => {
@@ -54,7 +54,7 @@ export const AddListForm = () => {
             </div>
             {formError && (
               <div className="mx-2">
-                <FormErrorMessage
+                <ErrorMessage
                   error={formError}
                   onHide={() => setFormError(null)}
                 />
