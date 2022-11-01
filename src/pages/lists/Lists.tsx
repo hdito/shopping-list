@@ -1,8 +1,10 @@
+import { FirestoreError } from 'firebase/firestore';
 import { useState } from 'react';
 import { sortByTime } from '../../utils/sortByTime';
 import { AddListForm } from './AddListForm';
 import { Card } from './Card';
 import { CardWithSettings } from './CardWithSettings';
+import { ErrorMessage } from '../../components/ErrorMessage';
 import { useLists } from './useLists';
 import { useSharedLists } from './useSharedLists';
 
@@ -11,6 +13,7 @@ export const Lists = () => {
   const [isSettingsBlocked, setIsSettingsBlocked] = useState(false);
   const { lists, loadingLists } = useLists();
   const { sharedLists, loadingSharedLists } = useSharedLists();
+  const [listsError, setListsError] = useState<FirestoreError | null>(null);
 
   return (
     <>
@@ -40,6 +43,7 @@ export const Lists = () => {
                     onIsSettingsBlocked={setIsSettingsBlocked}
                     list={list}
                     listToEdit={listToEdit}
+                    onError={setListsError}
                   />
                 ))}
             </div>
@@ -51,8 +55,16 @@ export const Lists = () => {
                 .sort(sortByTime)
                 .reverse()
                 .map((list) => (
-                  <Card key={list.id} list={list} />
+                  <Card key={list.id} list={list} onError={setListsError} />
                 ))}
+            </div>
+          )}
+          {listsError && (
+            <div className="fixed right-4 bottom-4">
+              <ErrorMessage
+                error={listsError}
+                onHide={() => setListsError(null)}
+              />
             </div>
           )}
         </>

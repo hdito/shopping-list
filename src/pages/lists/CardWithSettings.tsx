@@ -1,3 +1,4 @@
+import { FirestoreError } from 'firebase/firestore';
 import { ErrorMessage, Field, Formik } from 'formik';
 import { useState } from 'react';
 import { IoPencil, IoSettingsOutline, IoTrashOutline } from 'react-icons/io5';
@@ -13,12 +14,14 @@ export const CardWithSettings = ({
   isSettingsBlocked,
   onListToEdit,
   onIsSettingsBlocked,
+  onError,
 }: {
   list: list;
   listToEdit: string | null;
   isSettingsBlocked: boolean;
   onListToEdit: (id: string | null) => void;
   onIsSettingsBlocked: (arg: boolean) => void;
+  onError: (error: FirestoreError) => void;
 }) => {
   const [isEditTitle, setEditTitle] = useState(false);
   return (
@@ -32,7 +35,7 @@ export const CardWithSettings = ({
           try {
             await updateTitle(list.id, values.title);
           } catch (error) {
-            alert(error);
+            onError(error as FirestoreError);
           }
         }
         setEditTitle(false);
@@ -90,7 +93,7 @@ export const CardWithSettings = ({
                 try {
                   await deleteListAsOwner(list.id);
                 } catch (error) {
-                  alert(error);
+                  onError(error as FirestoreError);
                 }
               }}
               className="text-gray-700 hover:text-black text-2xl"
