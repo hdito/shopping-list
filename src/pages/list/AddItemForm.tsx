@@ -5,7 +5,7 @@ import { object, string } from 'yup';
 import { Button } from '../../components/Button';
 import { CustomInput } from '../../components/CustomInput';
 import { WideButton } from '../../components/WideButton';
-import { FormErrorMessage } from '../lists/FormErrorMessage';
+import { ErrorMessage as ErrorMessageButton } from '../../components/ErrorMessage';
 import { addItem } from './listApi';
 
 export const AddItemForm = ({ listID }: { listID: string }) => {
@@ -29,7 +29,7 @@ export const AddItemForm = ({ listID }: { listID: string }) => {
           <div className="w-full">
             <Form className="xs:m-auto flex gap-2 flex-col xs:w-fit xs:rounded border-y-2 xs:border-2 border-slate-300 shadow-md px-4 xs:px-2 py-2">
               {formError && (
-                <FormErrorMessage
+                <ErrorMessageButton
                   error={formError}
                   onHide={() => setFormError(null)}
                 />
