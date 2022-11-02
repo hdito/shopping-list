@@ -49,6 +49,7 @@ export const AddItemForm = ({ listID }: { listID: string }) => {
                   role="cancel"
                   onClick={() => setIsFormOpen(false)}
                   className="flex-1"
+                  type="button"
                 >
                   Cancel
                 </Button>

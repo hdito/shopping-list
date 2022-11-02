@@ -6,7 +6,8 @@ import { AuthForm } from './pages/auth/AuthForm';
 import { List } from './pages/list/List';
 import { ListProvider } from './pages/list/ListContext';
 import { ListHeader } from './pages/list/ListHeader';
-import { ListsPage } from './pages/lists/ListsPage';
+import { Lists } from './pages/lists/Lists';
+import { ListsHeader } from './pages/lists/ListsHeader';
 import { PageLayout } from './pages/lists/PageLayout';
 
 function App() {
@@ -42,7 +43,17 @@ function App() {
             </>
           }
         >
-          <Route index element={<ListsPage />} />
+          <Route
+            index
+            element={
+              <>
+                <ListsHeader />
+                <PageLayout>
+                  <Lists />
+                </PageLayout>
+              </>
+            }
+          />
           <Route
             path=":listId"
             element={

@@ -8,7 +8,7 @@ export interface list {
   public: boolean;
   editor?: string;
   admitted?: string;
-  items: { [listId: string]: item };
+  items: { data: { [listId: string]: item }; meta: string | null };
   createdAt: Timestamp;
   updatedAt?: Timestamp;
 }

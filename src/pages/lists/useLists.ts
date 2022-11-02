@@ -1,15 +1,14 @@
-import { useFirestoreUserContext } from './../../contexts/FirestoreUserContext';
-import { useState, useEffect } from 'react';
-import { list } from '../../types/list';
 import {
   collection,
   FirestoreError,
   onSnapshot,
-  orderBy,
   query,
   where,
 } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
 import { myFirestore } from '../../firebase';
+import { list } from '../../types/list';
+import { useFirestoreUserContext } from './../../contexts/FirestoreUserContext';
 export const useLists = () => {
   const [lists, setLists] = useState<list[]>([]);
   const [loadingLists, setLoadingLists] = useState(true);
@@ -22,8 +21,7 @@ export const useLists = () => {
     const unsubscribeLists = onSnapshot(
       query(
         collection(myFirestore, 'lists'),
-        where('owner', '==', firestoreUser.email),
-        orderBy('createdAt', 'desc')
+        where('owner', '==', firestoreUser.email)
       ),
       (querySnap) => {
         const newLists: list[] = [];
@@ -33,7 +31,10 @@ export const useLists = () => {
         if (listsError) setListsError(null);
       },
       (listsError) => {
-        setListsError(listsError);
+        {
+          setListsError(listsError);
+          console.log({ listsError });
+        }
       }
     );
 

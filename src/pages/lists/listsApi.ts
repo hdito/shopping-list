@@ -15,6 +15,7 @@ export const addListAsOwner = (title: string, email: string) => {
   return setDoc(doc(myFirestore, 'lists', listId), {
     id: listId,
     owner: email,
+    items: { data: {}, meta: '' },
     title,
     createdAt: serverTimestamp(),
     public: false,

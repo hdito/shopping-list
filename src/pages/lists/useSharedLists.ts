@@ -2,7 +2,6 @@ import {
   collection,
   FirestoreError,
   onSnapshot,
-  orderBy,
   query,
   where,
 } from 'firebase/firestore';
@@ -25,8 +24,7 @@ export const useSharedLists = () => {
       query(
         collection(myFirestore, 'lists'),
         where('editor', '==', firestoreUser.email),
-        where('public', '==', true),
-        orderBy('createdAt', 'desc')
+        where('public', '==', true)
       ),
       (querySnap) => {
         const newLists: list[] = [];
@@ -34,7 +32,9 @@ export const useSharedLists = () => {
         setSharedlists(newLists);
         setLoadingSharedLists(false);
       },
-      (error) => setSharedListsError(error)
+      (error) => {
+        setSharedListsError(error), console.log('shared', { error });
+      }
     );
 
     return unsubscribeShared;

@@ -14,15 +14,17 @@ export const toggleFinishItem = (
   itemId: string
 ) => {
   return updateDoc(doc(myFirestore, 'lists', listId), {
-    [`items.${itemId}.isFinished`]: isFinished,
-    [`items.${itemId}.updatedAt`]: serverTimestamp(),
+    [`items.data.${itemId}.isFinished`]: isFinished,
+    [`items.data.${itemId}.updatedAt`]: serverTimestamp(),
+    'items.meta': itemId,
     updatedAt: serverTimestamp(),
   });
 };
 
 export const deleteItem = (listId: string, itemId: string) => {
   return updateDoc(doc(myFirestore, 'lists', listId), {
-    [`items.${itemId}`]: deleteField(),
+    [`items.data.${itemId}`]: deleteField(),
+    'items.meta': itemId,
     updatedAt: serverTimestamp(),
   });
 };
@@ -37,12 +39,14 @@ export const updateItem = (
   }
 ) => {
   const data: { [key: string]: string | boolean | FieldValue } = {
-    [`items.${itemId}.updatedAt`]: serverTimestamp(),
+    [`items.data.${itemId}.updatedAt`]: serverTimestamp(),
   };
-  if (newData.title) data[`items.${itemId}.title`] = newData.title;
-  if (newData.isUrgent) data[`items.${itemId}.isUrgent`] = newData.isUrgent;
+  if (newData.title) data[`items.data.${itemId}.title`] = newData.title;
+  if (newData.isUrgent)
+    data[`items.data.${itemId}.isUrgent`] = newData.isUrgent;
   return updateDoc(doc(myFirestore, 'lists', listId), {
     ...data,
+    'items.meta': itemId,
     updatedAt: serverTimestamp(),
   });
 };
@@ -51,13 +55,14 @@ export const addItem = (listId: string, title: string) => {
   const itemId = nanoid();
 
   return updateDoc(doc(myFirestore, 'lists', listId), {
-    [`items.${itemId}`]: {
+    [`items.data.${itemId}`]: {
       id: itemId,
       title,
       isFinished: false,
       isUrgent: false,
       createdAt: serverTimestamp(),
     },
+    'items.meta': itemId,
     updatedAt: serverTimestamp(),
   });
 };

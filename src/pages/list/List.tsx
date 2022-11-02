@@ -17,9 +17,9 @@ export const List = () => {
   const [listError, setListError] = useState<FirestoreError | null>(null);
 
   let items: item[] = [];
-  if (list?.items)
-    items = Object.keys(list.items).map((key) => {
-      return list.items[key];
+  if (list?.items.data)
+    items = Object.keys(list.items.data).map((key) => {
+      return list.items.data[key];
     });
 
   return (

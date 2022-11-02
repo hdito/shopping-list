@@ -52,7 +52,6 @@ export const ManageAccessMenu = ({ list }: { list: list }) => {
                 alert(manageAccesError);
               }
             }
-            setIsMenuOpen(false);
           }}
         >
           {(outerProps) => (
