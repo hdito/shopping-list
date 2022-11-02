@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
+import { FirestoreUserErrorBoundary } from './components/FirestoreUserErrorBoundary';
 import { useAuth } from './contexts/AuthContext';
 import { FirestoreUserProvider } from './contexts/FirestoreUserContext';
 import { AuthForm } from './pages/auth/AuthForm';
@@ -32,7 +33,9 @@ function App() {
           element={
             <>
               {isUserVerified ? (
-                <FirestoreUserProvider />
+                <FirestoreUserProvider>
+                  <FirestoreUserErrorBoundary />
+                </FirestoreUserProvider>
               ) : (
                 <Navigate to="/auth" />
               )}
