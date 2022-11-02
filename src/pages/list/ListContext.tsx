@@ -33,6 +33,7 @@ export const ListProvider = ({ children }: PropsWithChildren) => {
       (docSnap) => {
         if (docSnap.exists()) setList(docSnap.data() as list);
         setLoadingList(false);
+        if (listError) setListError(null);
       },
       (error) => setListError(error)
     );
