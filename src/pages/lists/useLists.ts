@@ -30,6 +30,7 @@ export const useLists = () => {
         querySnap.forEach((doc) => newLists.push(doc.data() as list));
         setLists(newLists);
         setLoadingLists(false);
+        if (listsError) setListsError(null);
       },
       (listsError) => {
         setListsError(listsError);
