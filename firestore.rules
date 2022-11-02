@@ -114,6 +114,7 @@ service cloud.firestore {
         (allowOwnerUpdateTitlePublicAdmitted(request.auth, request.resource.data, resource.data) ||
         allowEditorUpdateEditor(request.auth, request.resource.data, resource.data) ||
         hasPermission(request.auth, resource.data) &&
+        request.resource.data.items.meta is string &&
         (allowCreateItem(request.resource.data.items.data, resource.data.items.data, request.resource.data.items.meta) ||
         allowDeleteItem(request.resource.data.items.data, resource.data.items.data, request.resource.data.items.meta) ||
         allowToggleItem(request.resource.data.items.data, resource.data.items.data, request.resource.data.items.meta) ||
